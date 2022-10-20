@@ -60,9 +60,6 @@ mbed::nfc::NFCEEPROMDriver& get_eeprom_driver(events::EventQueue& queue) {
 
 
 
-
-
-
 /* URL that will be written into the tag */
 const char url_string[] = "mbed.com";
 
@@ -121,6 +118,7 @@ private:
         else
         {
             printf("failed to read (error: %d)\r\n", result);
+            //need to find a way to log resault in memory
         }
     }
 
