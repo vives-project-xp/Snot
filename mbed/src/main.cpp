@@ -1,93 +1,153 @@
-/*
- * Copyright (c) 2006-2020 Arm Limited and affiliates.
- * SPDX-License-Identifier: Apache-2.0
+/* mbed Microcontroller Library
+ * Copyright (c) 2018-2018 ARM Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-#include "mbed.h"
+
+#include "events/EventQueue.h"
+
 #include "nfc/ndef/MessageBuilder.h"
 #include "nfc/ndef/common/URI.h"
-#include "nfc/ndef/common/Text.h"
 #include "nfc/ndef/common/util.h"
-#include "nfc/ndef/common/SimpleMessageParser.h"
 
-using mbed::nfc::ndef::Record;
-using mbed::nfc::ndef::RecordType;
-using mbed::nfc::ndef::RecordID;
-using mbed::nfc::ndef::MessageParser;
-using mbed::nfc::ndef::common::Text;
-using mbed::nfc::ndef::common::URI;
-using mbed::nfc::ndef::common::Mime;
+#include "NFCEEPROM.h"
+
+// #include "EEPROMDriver.h"
+#include <cstdio>
+
+using events::EventQueue;
+
+using mbed::Span;
+using mbed::nfc::NFCEEPROM;
+using mbed::nfc::NFCEEPROMDriver;
+
 using mbed::nfc::ndef::MessageBuilder;
 using mbed::nfc::ndef::common::span_from_cstr;
-using mbed::nfc::ndef::common::SimpleMessageParser;
+using mbed::nfc::ndef::common::URI;
+
+
+
+#ifndef SOURCE_EEPROMDRIVER_H_
+#define SOURCE_EEPROMDRIVER_H_
+
+#include "nfc/NFCEEPROMDriver.h"
+#include "events/EventQueue.h"
+
+/**
+ * Factory function that returns the NFC EEPROM driver.
+ *
+ * @param[in] queue The event queue that may be used by the driver.
+ *
+ * @return The NFC EEPROM driver to use.
+ */
+mbed::nfc::NFCEEPROMDriver& get_eeprom_driver(events::EventQueue& queue);
+
+#endif /* SOURCE_EEPROMDRIVER_H_ */
+
+
+
+
+
+
+/* URL that will be written into the tag */
+const char url_string[] = "mbed.com";
+
+class EEPROMExample : mbed::nfc::NFCEEPROM::Delegate
+{
+public:
+    EEPROMExample(events::EventQueue &queue, NFCEEPROMDriver &eeprom_driver) : _ndef_buffer(),
+                                                                               _eeprom(&eeprom_driver, &queue, _ndef_buffer),
+                                                                               _queue(queue)
+    {
+    }
+
+    void run()
+    {
+        if (_eeprom.initialize() != NFC_OK)
+        {
+            printf("failed to initialise\r\n");
+            _queue.break_dispatch();
+        }
+
+        _eeprom.set_delegate(this);
+
+        _queue.call(&_eeprom, &NFCEEPROM::write_ndef_message);
+    }
+
+private:
+    virtual void on_ndef_message_written(nfc_err_t result)
+    {
+        if (result == NFC_OK)
+        {
+            printf("message written successfully\r\n");
+        }
+        else
+        {
+            printf("failed to write (error: %d)\r\n", result);
+        }
+
+        _queue.call(&_eeprom, &NFCEEPROM::read_ndef_message);
+    }
+
+    virtual void on_ndef_message_read(nfc_err_t result)
+    {
+        if (result == NFC_OK)
+        {
+            printf("message read successfully\r\n");
+        }
+        else
+        {
+            printf("failed to read (error: %d)\r\n", result);
+        }
+    }
+
+    virtual void parse_ndef_message(const Span<const uint8_t> &buffer)
+    {
+        printf("Received an ndef message of size %d\r\n", buffer.size());
+    }
+
+    virtual size_t build_ndef_message(const Span<uint8_t> &buffer)
+    {
+        printf("Building an ndef message\r\n");
+
+        /* create a message containing the URL */
+
+        MessageBuilder builder(buffer);
+
+        /* URI expected a non-null terminated string  so we use a helper function that casts
+         * the pointer into a Span of size smaller by one */
+        URI uri(URI::HTTPS_WWW, span_from_cstr(url_string));
+
+        uri.append_as_record(builder, true);
+
+        return builder.get_message().size();
+    }
+
+private:
+    uint8_t _ndef_buffer[1024];
+    NFCEEPROM _eeprom;
+    EventQueue &_queue;
+};
 
 int main()
 {
-    uint8_t message_data[512];
-    const Span<uint8_t, 512> buffer(message_data, sizeof(message_data));
+    EventQueue queue;
+    NFCEEPROMDriver &eeprom_driver = get_eeprom_driver(queue);
 
-    MessageBuilder builder(buffer);
+    EEPROMExample example(queue, eeprom_driver);
 
-    Text text(Text::UTF8, span_from_cstr("en-US"), span_from_cstr("Mbed website"));
-    URI uri(URI::HTTPS_WWW, span_from_cstr("mbed.com"));
+    example.run();
+    queue.dispatch_forever();
 
-    uri.append_as_record(builder);
-    text.append_as_record(builder, /* last record */ true);
-
-    SimpleMessageParser parser;
-    struct : SimpleMessageParser::Delegate {
-        virtual void on_parsing_started()
-        {
-            printf("parsing started\r\n");
-        }
-
-        virtual void on_text_parsed(const Text &text, const RecordID &)
-        {
-            printf("Text record parsed.\r\n");
-            printf(
-                "\tlanguage: %.*s\r\n",
-                text.get_language_code().size(), text.get_language_code().data()
-            );
-            printf("\ttext: %.*s\r\n",  text.get_text().size(), text.get_text().data());
-        }
-
-        virtual void on_uri_parsed(const URI &uri, const RecordID &)
-        {
-            printf("URI parsed.\r\n");
-            printf("\tid: %d\r\n", uri.get_id());
-            printf("\tvalue: %.*s\r\n",  uri.get_uri_field().size(), uri.get_uri_field().data());
-        }
-
-        virtual void on_mime_parsed(const Mime &mime, const RecordID &)
-        {
-            printf("Mime object parsed.\r\n");
-            printf("\ttype: %.*s\r\n", mime.get_mime_type().size(), mime.get_mime_type().data());
-            printf("\tcontent size: %d\r\n", mime.get_mime_content().size());
-        }
-
-        virtual void on_unknown_record_parsed(const Record &record)
-        {
-            printf("Unknown record parsed.\r\n");
-            printf(
-                "\ttype: %d, type_value: %.*s\r\n",
-                record.type.tnf, record.type.value.size(), record.type.value.data()
-            );
-            printf(
-                "\tpayload size: %d, payload: %.*s\r\n",
-                record.payload.size(), record.payload.size(), record.payload.data()
-            );
-        }
-
-        virtual void on_parsing_terminated()
-        {
-            printf("parsing terminated\r\n");
-        }
-
-        virtual void on_parsing_error(MessageParser::error_t error)
-        {
-            printf("Parsing error: %d\r\n", error);
-        }
-    } delegate;
-
-    parser.set_delegate(&delegate);
-    parser.parse(buffer);
+    return 0;
 }
