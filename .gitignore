@@ -2,3 +2,4 @@ __pycache__/
 mbed-os/
 BUILD/
 mbed_settings.py
+.vscode
