@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include "mbed.h"
+
 #include "events/EventQueue.h"
 
 #include "nfc/ndef/MessageBuilder.h"
@@ -22,7 +24,7 @@
 
 #include "NFCEEPROM.h"
 
-// #include "EEPROMDriver.h"
+#include "EEPROMDriver.h"
 #include <cstdio>
 
 using events::EventQueue;
@@ -132,7 +134,7 @@ private:
     }
 
 private:
-    uint8_t _ndef_buffer[1024];
+    uint8_t _ndef_buffer[244];
     NFCEEPROM _eeprom;
     EventQueue &_queue;
 };
@@ -146,6 +148,9 @@ int main()
 
     example.run();
     queue.dispatch_forever();
-
+    while(true){
+        printf("-");
+    }
+    
     return 0;
 }
