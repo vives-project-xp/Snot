@@ -43,6 +43,7 @@ using mbed::nfc::ndef::common::URI;
 #define SOURCE_EEPROMDRIVER_H_
 
 #include "nfc/NFCEEPROMDriver.h"
+#include "m24sr_driver.h"
 #include "events/EventQueue.h"
 
 /**
@@ -52,7 +53,10 @@ using mbed::nfc::ndef::common::URI;
  *
  * @return The NFC EEPROM driver to use.
  */
-mbed::nfc::NFCEEPROMDriver& get_eeprom_driver(events::EventQueue& queue);
+mbed::nfc::NFCEEPROMDriver& get_eeprom_driver(events::EventQueue& queue) {
+    static mbed::nfc::vendor::ST::M24srDriver eeprom_driver;
+    return eeprom_driver;
+}
 
 #endif /* SOURCE_EEPROMDRIVER_H_ */
 
@@ -103,6 +107,15 @@ private:
         if (result == NFC_OK)
         {
             printf("message read successfully\r\n");
+            /*
+            if(!nfcLinked) {
+                pairedID = _ndef_buffer;
+            } else {
+                if(pairedID == _ndef_buffer || _ndef_buffer == barID) {
+                    unlock();
+                }
+            }
+            */
         }
         else
         {
