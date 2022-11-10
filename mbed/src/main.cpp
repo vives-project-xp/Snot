@@ -79,10 +79,8 @@ public:
             printf("failed to initialise\r\n");
             _queue.break_dispatch();
         }
-
         _eeprom.set_delegate(this);
-
-        _queue.call(&_eeprom, &NFCEEPROM::write_ndef_message);
+        _queue.call(&_eeprom, &NFCEEPROM::read_ndef_message);
     }
 
 private:
@@ -127,22 +125,22 @@ private:
         printf("Received an ndef message of size %d\r\n", buffer.size());
     }
 
-    virtual size_t build_ndef_message(const Span<uint8_t> &buffer)
-    {
-        printf("Building an ndef message\r\n");
+    // virtual size_t build_ndef_message(const Span<uint8_t> &buffer)
+    // {
+    //     printf("Building an ndef message\r\n");
 
-        /* create a message containing the URL */
+    //     /* create a message containing the URL */
 
-        MessageBuilder builder(buffer);
+    //     MessageBuilder builder(buffer);
 
-        /* URI expected a non-null terminated string  so we use a helper function that casts
-         * the pointer into a Span of size smaller by one */
-        URI uri(URI::HTTPS_WWW, span_from_cstr(url_string));
+    //     /* URI expected a non-null terminated string  so we use a helper function that casts
+    //      * the pointer into a Span of size smaller by one */
+    //     URI uri(URI::HTTPS_WWW, span_from_cstr(url_string));
 
-        uri.append_as_record(builder, true);
+    //     uri.append_as_record(builder, true);
 
-        return builder.get_message().size();
-    }
+    //     return builder.get_message().size();
+    // }
 
 private:
     uint8_t _ndef_buffer[1024];
@@ -159,6 +157,5 @@ int main()
 
     example.run();
     queue.dispatch_forever();
-
     return 0;
 }
