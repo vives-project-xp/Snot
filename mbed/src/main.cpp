@@ -18,6 +18,7 @@ bool firstCard = true;
 void loop();
 
 void defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid);
+void goodCard(void);
 
 void error(uint8_t *uid, uint8_t uidLength, uint32_t cardid);
 void unsupportedCard(uint8_t *uid, uint8_t uidLength);
@@ -54,6 +55,8 @@ void loop() {
 	static uint8_t lastUID[7];
 	static uint8_t lastUIDLength;
 	uint8_t newCardFound;
+
+	static uint8_t masterUID[] = { 0xED, 0xE8, 0xF4, 0x6C};
 	
 
 	// Wait for an ISO14443A type cards (Mifare, etc.).  When one is found
@@ -140,6 +143,25 @@ void loop() {
 	
 	// Display some basic information about the card
 	//defaultCardInfo(uid, uidLength, cardid);
+	bool masterCard = false;
+	if(!firstCard){
+		for (i = 0; i < uidLength; i++) {
+			if(uid[i] != masterUID[i]){
+				masterCard = false;
+				break;
+			}
+			else{
+				masterCard = true;
+			}
+		}	
+		if(masterCard){
+			goodCard();
+			firstCard = true;
+			return;
+		}
+	}
+
+
 
 	if(!firstCard){
 		for (i = 0; i < uidLength; i++) {
@@ -148,13 +170,9 @@ void loop() {
 				return;
 			}	
 		}	
-
-		motor = 1;
-		printf("That's a good card!\n");
-		ThisThread::sleep_for(2000);
-		motor = 0;
 	}
 
+	goodCard();
 	// Add here your code
 	
 
@@ -208,4 +226,11 @@ void defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid){
 
 	printf("Seems to be a Mifare Classic card #%lu\r\n", cardid);
 	printf("\r\n");
+}
+
+void goodCard(void){
+	motor = 1;
+	printf("That's a good card!\n");
+	ThisThread::sleep_for(2000);
+	motor = 0;
 }
