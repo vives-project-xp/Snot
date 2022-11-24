@@ -48,8 +48,8 @@ uint8_t pn532ack[] = {0x00, 0x00, 0xFF, 0x00, 0xFF, 0x00};
 uint8_t pn532response_firmwarevers[] = {0x00, 0xFF, 0x06, 0xFA, 0xD5, 0x03};
 
 // Uncomment these lines to enable debug output for PN532(SPI) and/or MIFARE related code
- #define PN532DEBUG
- #define MIFAREDEBUG
+//  #define PN532DEBUG
+//  #define MIFAREDEBUG
 
 // Hardware SPI-specific configuration:
 #define PN532_PACKBUFFSIZ 64
@@ -827,7 +827,7 @@ uint8_t PN532::mifareclassic_WriteDataBlock (uint8_t blockNumber, uint8_t * data
 #endif
             return 0;
         }
-    wait_ms(10);
+    ThisThread::sleep_for(10);
 
     /* Read the response packet */
     readdata(pn532_packetbuffer, 26);
@@ -1073,7 +1073,7 @@ uint8_t PN532::mifareultralight_WritePage (uint8_t page, uint8_t * data)
             // Return Failed Signal
             return 0;
         }
-    wait_ms(10);
+    ThisThread::sleep_for(10);
 
     /* Read the response packet */
     readdata(pn532_packetbuffer, 26);
@@ -1217,7 +1217,7 @@ uint8_t PN532::ntag2xx_WritePage (uint8_t page, uint8_t * data)
             // Return Failed Signal
             return 0;
         }
-    wait_ms(10);
+    ThisThread::sleep_for(10);
 
     /* Read the response packet */
     readdata(pn532_packetbuffer, 26);
@@ -1356,7 +1356,7 @@ bool PN532::readack() {
 bool PN532::isready() {
     // SPI read status and check if ready.
     _ss = 0;
-    wait_ms(2);
+    ThisThread::sleep_for(2);
     spi_write(PN532_SPI_STATREAD);
     // read byte
     uint8_t x = spi_read();
@@ -1384,7 +1384,7 @@ bool PN532::waitready(uint16_t timeout) {
                 return false;
             }
         }
-        wait_ms(10);
+        ThisThread::sleep_for(10);
     }
     return true;
 }
@@ -1399,14 +1399,14 @@ bool PN532::waitready(uint16_t timeout) {
 /**************************************************************************/
 void PN532::readdata(uint8_t* buff, uint8_t n) {
     _ss = 0;
-    wait_ms(2);
+    ThisThread::sleep_for(2);
     spi_write(PN532_SPI_DATAREAD);
 
 #ifdef PN532DEBUG
     printf("Reading: ");
 #endif
     for (uint8_t i=0; i<n; i++) {
-        wait_ms(1);
+        ThisThread::sleep_for(1);
         buff[i] = spi_read();
 #ifdef PN532DEBUG
         printf(" 0x%x", buff[i]);
@@ -1440,7 +1440,7 @@ void PN532::writecommand(uint8_t* cmd, uint8_t cmdlen) {
 #endif
 
     _ss = 0;
-    wait_ms(2);     // or whatever the delay is for waking up the board
+    ThisThread::sleep_for(2);     // or whatever the delay is for waking up the board
     spi_write(PN532_SPI_DATAWRITE);
 
     checksum = PN532_PREAMBLE + PN532_PREAMBLE + PN532_STARTCODE2;

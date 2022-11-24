@@ -1,5 +1,8 @@
+#define MBED_CONF_RTOS_PRESENT 1
 #include "mbed.h"
 #include "pn532.h"
+#include "rtos.h"
+
 
 #define NOTE_A4  440
 #define NOTE_G7  3136
@@ -32,13 +35,6 @@ int main() {
         loop();
     }
 }
-
-//void beep(uint16_t note, uint16_t duration) {
-//    speaker.period(1.0/float(note));
-//    speaker = 0.25;
-//    wait_ms(duration);
-//    speaker = 0;
-//}
 
 void loop() {
     uint8_t success, i;
@@ -82,6 +78,7 @@ void loop() {
         leds = 1;
 
         if (uidLength == 4) {
+
             // We probably have a Mifare Classic card ...
             uint32_t cardid = uid[0];
             cardid <<= 8;
@@ -116,7 +113,7 @@ void loop() {
                 if (success) {
                     // Data seems to have been read ... spit it out
                     leds = 0x6;
-                    //////////////////////////////beep(NOTE_G7, 200);
+                    
 
                     // Display some basic information about the card
                     printf("Found an ISO14443A card\r\n");
@@ -128,6 +125,15 @@ void loop() {
 
                     printf("Reading Block 4: ");
                     rfid.PrintHexChar(data, 16);
+                    if(data[1] == 0){
+                        printf("%d, %d, %d", data[0],data[1],data[2]);
+
+                        uint8_t testWrite[] = {1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6};
+                        uint8_t *testPoint = testWrite;
+                        rfid.mifareclassic_WriteDataBlock(4, testPoint);
+                        printf("\n*Changed data*\n");
+                    }
+                    
                     printf("\r\n");
                 } else {
                     leds = 0x9;
@@ -168,7 +174,7 @@ void loop() {
             printf("\r\n");
         }
 
-        wait_ms(200);
+        ThisThread::sleep_for(200);
         leds = 0;
 
         readTimer.reset();
