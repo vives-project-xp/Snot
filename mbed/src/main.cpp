@@ -139,11 +139,8 @@ void loop() {
 	leds = 0x6;
 	
 	// Display some basic information about the card
-	defaultCardInfo(uid, uidLength, cardid);
+	//defaultCardInfo(uid, uidLength, cardid);
 
-	
-	// Add here your code
-	
 	if(!firstCard){
 		for (i = 0; i < uidLength; i++) {
 			if(uid[i] != lastUID[i]){
@@ -157,6 +154,9 @@ void loop() {
 		ThisThread::sleep_for(2000);
 		motor = 0;
 	}
+
+	// Add here your code
+	
 
 	// if(data[1] == 0){
 			
