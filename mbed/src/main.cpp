@@ -156,6 +156,7 @@ void loop() {
 		}	
 		if(masterCard){
 			goodCard();
+			masterCard = false;
 			firstCard = true;
 			return;
 		}
