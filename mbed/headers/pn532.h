@@ -30,6 +30,7 @@
 #ifndef PN532_H
 #define PN532_H
 #include "mbed.h"
+#include "rtos.h"
 
 #define PN532_PREAMBLE                      (0x00)
 #define PN532_STARTCODE1                    (0x00)
