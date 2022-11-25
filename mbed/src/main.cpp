@@ -25,25 +25,25 @@ void unsupportedCard(uint8_t *uid, uint8_t uidLength);
 bool newCard(void);
 
 int main() {
-    printf("Hello!\r\n");
+	printf("Hello!\r\n");
 
-    uint32_t versiondata = rfid.getFirmwareVersion();
-    if (!versiondata) {
-        printf("Didn't find PN53x board\r\n");
-        while (1); // halt
-    }
+	uint32_t versiondata = rfid.getFirmwareVersion();
+	if (!versiondata) {
+		printf("Didn't find PN53x board\r\n");
+		while (1); // halt
+	}
 
-    printf("Found chip PN5%lx\r\n", ((versiondata>>24) & 0xFF));
-    printf("Firmware ver. %lu.%lu\r\n", (versiondata>>16) & 0xFF,
-                    (versiondata>>8) & 0xFF);
+	printf("Found chip PN5%lx\r\n", ((versiondata>>24) & 0xFF));
+	printf("Firmware ver. %lu.%lu\r\n", (versiondata>>16) & 0xFF,
+									(versiondata>>8) & 0xFF);
 
-    rfid.SAMConfig();
+	rfid.SAMConfig();
 
-    printf("Waiting for an ISO14443A Card ...\r\n");
+	printf("Waiting for an ISO14443A Card ...\r\n");
 
-    while (1) {
-        loop();
-    }
+	while (1) {
+		loop();
+	}
 }
 
 
@@ -94,7 +94,7 @@ void loop() {
 
 	if (newCardFound && firstCard){
 		for (i = 0; i < uidLength; i++) {
-		lastUID[i] = uid[i];
+			lastUID[i] = uid[i];
 		}
 		lastUIDLength = uidLength;
 
