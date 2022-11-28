@@ -1,13 +1,14 @@
-
 #include "mbed.h"
 #include "pn532.h"
+#include "Servo.h"
+#include "rtos.h"
 
 
 #define NOTE_A4  440
 #define NOTE_G7  3136
 
 DigitalOut leds(LED1);
-DigitalOut motor(D0);
+Servo cap(D9); 
 
 PN532 rfid(D11, D12, D13, D10);
 Timer readTimer;
@@ -23,6 +24,10 @@ void goodCard(void);
 void error(uint8_t *uid, uint8_t uidLength, uint32_t cardid);
 void unsupportedCard(uint8_t *uid, uint8_t uidLength);
 bool newCard(void);
+bool checkMaster(uint8_t uid[], uint8_t lastuid[], uint8_t uidLength, uint8_t masterUID[]);
+
+void openCap(void);
+void closeCap(void);
 
 int main() {
 	printf("Hello!\r\n");
@@ -74,7 +79,7 @@ void loop() {
 			newCardFound = 1;
 		}
 		readTimer.reset();
-
+		// check later if it's needed
 		// Check id lenght -> if the same,
 		// check if values are the same
 		if (uidLength != lastUIDLength) {
@@ -126,7 +131,7 @@ void loop() {
 
 	if (!success) { error(uid, uidLength, cardid); return; }
 			
-	uint8_t data[16];
+	// uint8_t data[16];
 
 	// If you want to write something to block 4 to test with, uncomment
 	// the following line and this text should be read back in a minute
@@ -143,27 +148,16 @@ void loop() {
 	
 	// Display some basic information about the card
 	//defaultCardInfo(uid, uidLength, cardid);
-	bool masterCard = false;
-	if(!firstCard){
-		for (i = 0; i < uidLength; i++) {
-			if(uid[i] != masterUID[i]){
-				masterCard = false;
-				break;
-			}
-			else{
-				masterCard = true;
-			}
-		}	
-		if(masterCard){
-			goodCard();
-			masterCard = false;
-			firstCard = true;
-			return;
-		}
+	bool masterCard = checkMaster(uid, lastUID, uidLength, masterUID);
+
+	// if mastercard save the next seen card
+	if(masterCard){
+		goodCard();
+		masterCard = false;
+		firstCard = true;
+		return;
 	}
-
-
-
+	
 	if(!firstCard){
 		for (i = 0; i < uidLength; i++) {
 			if(uid[i] != lastUID[i]){
@@ -174,19 +168,8 @@ void loop() {
 	}
 
 	goodCard();
-	// Add here your code
 	
-
-	// if(data[1] == 0){
-			
-
-	// 	uint8_t testWrite[] = {1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6};
-	// 	rfid.mifareclassic_WriteDataBlock(4, testWrite);
-	// 	printf("\n*Changed data*\n");
-
-	// }
-	
-	ThisThread::sleep_for(200);
+	ThisThread::sleep_for(200ms);
 	leds = 0;
 
 	readTimer.reset();
@@ -229,9 +212,34 @@ void defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid){
 	printf("\r\n");
 }
 
+// Add blinking LED on new thread > on wrong/right card?
 void goodCard(void){
-	motor = 1;
+	openCap();
 	printf("That's a good card!\n");
-	ThisThread::sleep_for(2000);
-	motor = 0;
+	rtos::ThisThread::sleep_for(2s); // Need check comfortable wait time
+	closeCap();
+}
+
+bool checkMaster(uint8_t uid[], uint8_t lastuid[], uint8_t uidLength, uint8_t masterUID[]){
+	bool masterCard = false;
+
+	for (int i = 0; i < uidLength; i++) {
+		if(uid[i] != masterUID[i]){
+			masterCard = true;
+			break;
+		}
+		else{
+			masterCard = true;
+		}
+	}
+	if(masterCard) return true;
+	return false;
+}
+
+void closeCap() {
+	cap.write(0.5);
+}
+
+void openCap(){
+	cap.write(0);
 }
