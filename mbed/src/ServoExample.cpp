@@ -6,8 +6,10 @@
 PwmOut motorFwd(D5);
 PwmOut motorRev(D6); 
 Servo myservo(D9);
+// NFC simulator
 InterruptIn user_button(BUTTON1);
 
+//close
 void tighten() {
     for(float p = 0.2; p<0.55; p += 0.1) {
 			myservo.write(p);
@@ -15,6 +17,7 @@ void tighten() {
     }
 }
 
+//open
 void loss() {
     myservo.write(0.2);
 }
