@@ -12,6 +12,8 @@ Voorlopig hebben we een aantal designs gehad. Het laatste design is de blauwe do
 
 ## Code
 
+- git clone git@github.com:vives-project-xp/Snot.git
+
 De volledige code is terug te vinden onder de file 'mbed'.
 Indien je de schakeling wil testen zonder de NFC maar enkel met drukknoppen moet je de file 'cap' gebruiken
 
