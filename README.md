@@ -17,10 +17,12 @@ Indien je de schakeling wil testen zonder de NFC maar enkel met drukknoppen moet
 
 ## Benodigdheden Software
 
-- installeren van Visual Studio Code: <https://code.visualstudio.com/> // + Benodigde extenties (zou moeten automatisch aanbieden welke je nodig hebt)
-- Installeren van python: <https://www.python.org/downloads/windows/> // Take the lastest STABLE release
+- Installeren van Visual Studio Code: <https://code.visualstudio.com/> // + Benodigde extenties (zou moeten automatisch aanbieden welke je nodig hebt)
+- Installeren van python: <https://www.academicsoftware.eu/software/27/265> // Take the lastest STABLE release
 - Installeren van conda: <https://lab-microcontrollers.netlify.app/lab-1/#goal>
 - Installeren van mbed: <https://lab-microcontrollers.netlify.app/lab-1/#mbed>
+- Installeren van KiCad: <https://www.kicad.org/download/windows/> // CERN Switzerland
+- Installeren van SolidEdge: <https://www.academicsoftware.eu/software/25/292>
 
 Zorg er ook voor dat miniconda is toegevoegd aan je omgevings variabelen: bv. C:\Users\thybr\miniconda3\Scripts
 
