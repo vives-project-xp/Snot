@@ -40,7 +40,7 @@ Zorg er ook voor dat miniconda is toegevoegd aan je omgevings variabelen: bv. C:
 
 ## Benodigdheden Hardware
 
-- cap + valse bodem + dekseltje motor 
+- Cap + valse bodem + dekseltje motor 
 - STM32L467RG voor compilatie
 - PN532 (versie blauw) voor scannen van de NFC
 - Zelfgemaakte PCB wanneer werken voor STM te vervangen (zou moeten in cap passen)
