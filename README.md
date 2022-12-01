@@ -17,6 +17,6 @@ Indien je de schakeling wil testen zonder de NFC maar enkel met drukknoppen moet
 
 # Benodigdheden Software
 
-installeren van python: <https://www.python.org/downloads/windows/> // Take the lastest STABLE release
-installeren van conda: <https://lab-microcontrollers.netlify.app/lab-1/#goal>
-installeren van mbed: <https://lab-microcontrollers.netlify.app/lab-1/#mbed>
+- installeren van python: <https://www.python.org/downloads/windows/> // Take the lastest STABLE release
+- installeren van conda: <https://lab-microcontrollers.netlify.app/lab-1/#goal>
+- installeren van mbed: <https://lab-microcontrollers.netlify.app/lab-1/#mbed>
