@@ -19,6 +19,12 @@ Voor het binnenhalen van de code en overige:
 De volledige code is terug te vinden onder de file 'mbed'.
 Indien je de schakeling wil testen zonder de NFC maar enkel met drukknoppen moet je de file 'cap' gebruiken
 
+Voor het compileren van de code:
+- Open powershell
+- Conda create mbed (zie installation guide conda)
+- Conda activate mbed (zie installation guide conda voor installatie extensies)
+- mbed compile -f
+
 ## Benodigdheden Software
 
 - Installeren van Visual Studio Code: <https://code.visualstudio.com/> // + Benodigde extenties (zou moeten automatisch aanbieden welke je nodig hebt)
