@@ -10,7 +10,9 @@ Join het discord kanaal voor alle info en vragen: <https://discord.gg/XazaEC6M>
 
 Voorlopig hebben we een aantal designs gehad. Het laatste design is de blauwe dop.
 Zie discord INFO/Design voor verdere info.
+## PCB Design
 
+Voor het elektronisch en PCB schema terug te vinden ga je naar discord: INFO/PCB-Design
 ## Code
 
 Voor het binnenhalen van de code en overige:
