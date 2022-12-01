@@ -12,6 +12,7 @@ Voorlopig hebben we een aantal designs gehad. Het laatste design is de blauwe do
 
 ## Code
 
+Voor het binnenhalen van de code en overige:
 - git clone git@github.com:vives-project-xp/Snot.git
 
 De volledige code is terug te vinden onder de file 'mbed'.
