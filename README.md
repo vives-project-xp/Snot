@@ -1,6 +1,6 @@
-# Snot
+# SNOT
 
-Safe night out together
+Safe Night Out Together
 
 ## Discord
 
