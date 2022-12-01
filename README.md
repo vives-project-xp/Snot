@@ -38,3 +38,10 @@ Voor het compileren van de code:
 
 Zorg er ook voor dat miniconda is toegevoegd aan je omgevings variabelen: bv. C:\Users\thybr\miniconda3\Scripts
 
+## Benodigdheden Hardware
+
+- STM32L467RG voor compilatie
+- PN532 (versie blauw) voor scannen van de NFC
+- Zelfgemaakte PCB wanneer werken voor STM te vervangen (zou moeten in cap passen)
+- PN532 (versie rood) voor het scannen van de NFC (zou moeten in de cap passen)
+- Alle bestelde hardware + deze solderen op de zelf gemaakte PCB
