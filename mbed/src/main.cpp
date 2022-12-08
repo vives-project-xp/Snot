@@ -2,7 +2,6 @@
 #include "pn532.h"
 #include "Servo.h"
 
-
 DigitalOut leds(LED1);
 
 PN532 rfid(D11, D12, D13, D10);
@@ -28,18 +27,15 @@ bool checkMaster(uint8_t data[]);
 void openCap(void);
 void closeCap(void);
 
-
 // Functions to configure a tag (Not used for cap)
 bool setMaster(uint8_t *uid, uint8_t uidLength);
 bool setGood(uint8_t *uid, uint8_t uidLength);
 bool setBad(uint8_t *uid, uint8_t uidLength);
 
-
 uint8_t password[6] = { 0 };
 
 int main() {
     printf("Hello!\r\n");
-
         // Checks if it can detect the PN532 shield
         uint32_t versiondata = rfid.getFirmwareVersion();
         if (!versiondata) {
@@ -47,15 +43,10 @@ int main() {
             while(1);
         }
 
-    
-    
-
     printf("Found chip PN5%lx\r\n", ((versiondata>>24) & 0xFF));
-    printf("Firmware ver. %lu.%lu\r\n", (versiondata>>16) & 0xFF,
-                                    (versiondata>>8) & 0xFF);
+    printf("Firmware ver. %lu.%lu\r\n", (versiondata>>16) & 0xFF, (versiondata>>8) & 0xFF);
 
     rfid.SAMConfig();
-
     printf("Waiting for an ISO14443A Card ...\r\n");
 
     while (1) {
@@ -65,7 +56,6 @@ int main() {
 
 
 void loop() {
-    
     uint8_t success, i;
     uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
     uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
@@ -74,8 +64,7 @@ void loop() {
     // 'uid' will be populated with the UID, and uidLength will indicate
     // if the uid is 4 bytes (Mifare Classic) or 7 bytes (Mifare Ultralight)
     success = rfid.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
-    
-    
+
     if (uidLength != 4) {unsupportedCard(uid, uidLength); return;} 
     // We probably have a Mifare Classic card ...
     uint32_t cardid = uid[0];
@@ -86,15 +75,10 @@ void loop() {
     cardid <<= 8;
     cardid |= uid[3];
 
-
-
-
     // setMaster(uid,uidLength);
     // setGood(uid,uidLength);
     // setBad(uid, uidLength);
     // return;
-
-
 
     // default user keyA
     success = rfid.mifareclassic_AuthenticateBlock(uid, uidLength, 8, 0, keyA);
@@ -105,7 +89,7 @@ void loop() {
     // Try to read password from block 4
     success = rfid.mifareclassic_ReadDataBlock(8, data);
     if (!success) { error(uid, uidLength, cardid); return; }
-    
+
     // Display some basic information about the card
     // defaultCardInfo(uid, uidLength, cardid);
 
@@ -135,14 +119,10 @@ void loop() {
             return;
         }
     }
-
     goodCard();
-    
-    
 }
 
 void error(uint8_t *uid, uint8_t uidLength, uint32_t cardid) { 
-
     printf("Found an ISO14443A card\r\n");
     printf("  UID Length: %d bytes\r\n", uidLength);
     printf("  UID Value: ");
@@ -183,7 +163,6 @@ void goodCard(void){
 }
 
 bool checkMaster(uint8_t data[]){
-    
     uint8_t masterPass[3] { 0x34,0x35,0x36 };
 
     //check password
@@ -204,7 +183,6 @@ void openCap(){
     cap.write(0);
 }
 
-
 // call on authy error with *new* default Key
 bool setKey(uint8_t uid[], uint8_t uidLength, uint8_t password[]){
 //    uint8_t oldKeyA[5] = { 0x31, 0x32, 0x33, 0x34, 0x35 };
@@ -215,7 +193,6 @@ bool setKey(uint8_t uid[], uint8_t uidLength, uint8_t password[]){
        printf("Couldn't authenticate, try other key?\n");
        return false;
    }
-
 
    // uint8_t defaultAcces[4] = {0xFF, 0x07, 0x80, 0x69};
    uint8_t newKeyA[16] = { 0x31, 0x32, 0x33, 0x00, 0x00, 0x00, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
@@ -228,14 +205,12 @@ bool setKey(uint8_t uid[], uint8_t uidLength, uint8_t password[]){
    }
 
    // write new user password to block 8
-   
    success = rfid.mifareclassic_WriteDataBlock(8, password);
    if(!success){
        printf("Couldn't change password");
        return false;
    }
    printf("Succesfully set password\n");
-   
    return true;
 }
 
@@ -248,7 +223,6 @@ bool setMaster(uint8_t uid[], uint8_t uidLength){
        printf("Couldn't authenticate, try other key?\n");
        return false;
    }
-
 
    // uint8_t defaultAcces[4] = {0xFF, 0x07, 0x80, 0x69};
    uint8_t newKeyA[16] = { 0x31, 0x32, 0x33, 0x00, 0x00, 0x00, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
@@ -267,7 +241,6 @@ bool setMaster(uint8_t uid[], uint8_t uidLength){
        return false;
    }
    printf("Succesfully set password\n");
-   
    return true;
 }
 
@@ -280,7 +253,6 @@ bool setGood(uint8_t uid[], uint8_t uidLength ){
        return false;
    }
 
-
    // uint8_t defaultAcces[4] = {0xFF, 0x07, 0x80, 0x69};
    uint8_t newKeyA[16] = { 0x31, 0x32, 0x33, 0x00, 0x00, 0x00, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
    // set new KeyA
@@ -292,14 +264,14 @@ bool setGood(uint8_t uid[], uint8_t uidLength ){
    }
 
    // write new user password to block 4
-   
+
    success = rfid.mifareclassic_WriteDataBlock(8, password);
    if(!success){
        printf("Couldn't change password");
        return false;
    }
    printf("Succesfully set password\n");
-   
+
    return true;
 }
 
@@ -312,7 +284,6 @@ bool setBad(uint8_t uid[], uint8_t uidLength ){
        return false;
    }
 
-
    // uint8_t defaultAcces[4] = {0xFF, 0x07, 0x80, 0x69};
    uint8_t newKeyA[16] = { 0x31, 0x32, 0x33, 0x00, 0x00, 0x00, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
    // set new KeyA
@@ -324,13 +295,11 @@ bool setBad(uint8_t uid[], uint8_t uidLength ){
    }
 
    // write new user password to block 4
-   
    success = rfid.mifareclassic_WriteDataBlock(8, password);
    if(!success){
        printf("Couldn't change password");
        return false;
    }
    printf("Succesfully set password\n");
-   
    return true;
 }
