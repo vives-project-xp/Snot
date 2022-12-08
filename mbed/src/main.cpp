@@ -7,6 +7,7 @@
 
 
 DigitalOut leds(LED1);
+// Ledring met DI(PA_1/A1) en DO(PA_4/A2) 
 
 PN532 rfid(D11, D12, D13, D10);
 Servo cap(D9);
