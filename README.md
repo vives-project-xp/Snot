@@ -47,7 +47,7 @@ Voor het compileren van de code:
 - Open powershell
 - Conda create mbed (zie installation guide (mini)conda)
 - Conda activate mbed (zie installation guide (mini)conda voor installatie extensies)
-- mbed compile -f
+- ```bash mbed compile -f```
 ## Opstelling Cap 
 
 Deze opstelling is voor het testen van de schakeling die in de cap gaat. Dit wordt vervangen door de zelf gemaakte pcb in de volgende fase.
