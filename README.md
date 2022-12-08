@@ -39,8 +39,8 @@ Voor het compileren van de code:
 
 - Installeren van Visual Studio Code: <https://code.visualstudio.com/> // + Benodigde extenties (zou moeten automatisch aanbieden welke je nodig hebt)
 - Installeren van python: <https://www.academicsoftware.eu/software/27/265> // Take the lastest STABLE release
-- Installeren van (mini)conda: <https://lab-microcontrollers.netlify.app/lab-1/#goal>
-- Installeren van mbed: <https://lab-microcontrollers.netlify.app/lab-1/#mbed>
+- Installeren van (mini)conda: <https://software-installation-guide.netlify.app/conda/>
+- Installeren van mbed: <https://software-installation-guide.netlify.app/mbed/>
 - Installeren van KiCad: <https://www.kicad.org/download/windows/> // CERN Switzerland
 - Installeren van SolidEdge: <https://www.academicsoftware.eu/software/25/292>
 
