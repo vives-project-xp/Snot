@@ -45,7 +45,7 @@ Zorg er ook voor dat miniconda is toegevoegd aan je omgevings variabelen: bv. C:
 ## Opstelling Cap 
 
 Deze opstelling is voor het testen van de schakeling die in de cap gaat. Dit wordt vervangen door de zelf gemaakte pcb in de volgende fase.
-![opstellingCap](./fotos/opstellingCap.jpg)
+![opstellingCap](./fotos/opstellingCap.png)
 ## Benodigdheden Hardware
 
 - Cap + valse bodem + dekseltje motor
