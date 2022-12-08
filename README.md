@@ -13,7 +13,11 @@ Zie discord INFO/Design voor verdere info.
 
 ## PCB Design
 
-Voor het elektronisch en PCB schema terug te vinden ga je naar discord: INFO/PCB-Design
+Om de shield te laten werken moet je hem in SPI mode zetten. Voor SPI moet je SEL0 en SEL1 sluiten, je moet ze dus dichtsolderen of met een schakelaar connecteren.
+
+Om de shield te verbinden met bv. een nucleo moet je 3 power pinnen(5V, 3V3 en GND) en 4 spi pinnen(MOSI, MISO, SCK, en CS/SS) verbinden.
+
+Voor het elektronisch en PCB schema terug te vinden of meer info te krijgen ga je naar discord: INFO/PCB-Design
 
 ## Code
 

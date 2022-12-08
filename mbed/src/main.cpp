@@ -12,25 +12,35 @@ bool firstCard = true;
 
 void loop();
 
+// Info of factory-new tags
 void defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid);
+// Call when a good card is detected, opens the servo in the cap
 void goodCard(void);
-bool setKey(uint8_t uid[], uint8_t uidLength );
+// Sets the identifying key in block 8
+bool setKey(uint8_t uid[], uint8_t uidLength, uint8_t password[]);
 
+// Outputs read card data and detected error(if theres an error a wrong key was probably used)
 void error(uint8_t *uid, uint8_t uidLength, uint32_t cardid);
 void unsupportedCard(uint8_t *uid, uint8_t uidLength);
+// Checks if presented tag is a master tag
 bool checkMaster(uint8_t data[]);
-// servo function
+// servo functions
 void openCap(void);
 void closeCap(void);
 
+
+// Functions to configure a tag (Not used for cap)
 bool setMaster(uint8_t *uid, uint8_t uidLength);
 bool setGood(uint8_t *uid, uint8_t uidLength);
 bool setBad(uint8_t *uid, uint8_t uidLength);
-uint8_t password[6] = { 0 }; // default password
+
+
+uint8_t password[6] = { 0 };
+
 int main() {
     printf("Hello!\r\n");
 
-   
+        // Checks if it can detect the PN532 shield
         uint32_t versiondata = rfid.getFirmwareVersion();
         if (!versiondata) {
             printf("Didn't find PN53x board\r\n");
@@ -210,16 +220,16 @@ bool setKey(uint8_t uid[], uint8_t uidLength, uint8_t password[]){
    // uint8_t defaultAcces[4] = {0xFF, 0x07, 0x80, 0x69};
    uint8_t newKeyA[16] = { 0x31, 0x32, 0x33, 0x00, 0x00, 0x00, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
    // set new KeyA
-   success = rfid.mifareclassic_WriteDataBlock(7, newKeyA);
+   success = rfid.mifareclassic_WriteDataBlock(11, newKeyA);
 
    if(!success){
        printf("Something went wrong and couldn't write new Key\n");
        return false;
    }
 
-   // write new user password to block 4
+   // write new user password to block 8
    
-   success = rfid.mifareclassic_WriteDataBlock(4, password);
+   success = rfid.mifareclassic_WriteDataBlock(8, password);
    if(!success){
        printf("Couldn't change password");
        return false;
