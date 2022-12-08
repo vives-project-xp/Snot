@@ -5,6 +5,7 @@ Safe Night Out Together
 ## Discord
 
 Join het discord kanaal voor alle info en vragen: [Discord](https://discord.gg/33ayYHaHzA)
+
 Zie ook:  [Redmine](https://project.devbit.be/projects/snot)
 
 ## Dop Design
