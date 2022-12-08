@@ -16,7 +16,6 @@ uint8_t password[6] = { 0 };
 
 int main() {
     printf("Hello!\r\n");
-
         // Checks if it can detect the PN532 shield
         uint32_t versiondata = m_rfid.getFirmwareVersion();
         if (!versiondata) {
@@ -25,8 +24,7 @@ int main() {
         }
 
     printf("Found chip PN5%lx\r\n", ((versiondata>>24) & 0xFF));
-    printf("Firmware ver. %lu.%lu\r\n", (versiondata>>16) & 0xFF,
-                                    (versiondata>>8) & 0xFF);
+    printf("Firmware ver. %lu.%lu\r\n", (versiondata>>16) & 0xFF, (versiondata>>8) & 0xFF);
 
     m_rfid.SAMConfig();
 

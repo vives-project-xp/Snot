@@ -6,6 +6,8 @@ Safe Night Out Together
 
 Join het discord kanaal voor alle info en vragen: [Discord](https://discord.gg/33ayYHaHzA)
 
+Zie ook:  [Redmine](https://project.devbit.be/projects/snot)
+
 ## Dop Design
 
 Voorlopig hebben we een aantal designs gehad. Het laatste design is de blauwe dop.
@@ -19,11 +21,23 @@ Om de shield te verbinden met bv. een nucleo moet je 3 power pinnen(5V, 3V3 en G
 
 Voor het elektronisch en PCB schema terug te vinden of meer info te krijgen ga je naar discord: INFO/PCB-Design
 
+## Benodigdheden Software
+
+- Installeren van Visual Studio Code: <https://code.visualstudio.com/> // + Benodigde extenties (zou moeten automatisch aanbieden welke je nodig hebt)
+- Installeren van python: <https://www.academicsoftware.eu/software/27/265> // Take the lastest STABLE release
+- Installeren van (mini)conda: <https://software-installation-guide.netlify.app/conda/>
+- Installeren van mbed: <https://software-installation-guide.netlify.app/mbed/>
+- Installeren van KiCad: <https://www.kicad.org/download/windows/> // CERN Switzerland
+- Installeren van SolidEdge: <https://www.academicsoftware.eu/software/25/292>
+
+Zorg er ook voor dat miniconda is toegevoegd aan je omgevings variabelen: bv. C:\Users\thybr\miniconda3\Scripts
+
 ## Code
 
 Voor het binnenhalen van de code en overige:
-
-- git clone git@github.com:vives-project-xp/Snot.git
+```bash
+git clone git@github.com:vives-project-xp/Snot.git
+```
 
 De volledige code is terug te vinden onder de file 'mbed'.
 Indien je de schakeling wil testen zonder de NFC maar enkel met drukknoppen moet je de file 'cap' gebruiken
@@ -33,19 +47,10 @@ Voor het compileren van de code:
 - Open powershell
 - Conda create mbed (zie installation guide (mini)conda)
 - Conda activate mbed (zie installation guide (mini)conda voor installatie extensies)
-- mbed compile -f
-
-## Benodigdheden Software
-
-- Installeren van Visual Studio Code: <https://code.visualstudio.com/> // + Benodigde extenties (zou moeten automatisch aanbieden welke je nodig hebt)
-- Installeren van python: <https://www.academicsoftware.eu/software/27/265> // Take the lastest STABLE release
-- Installeren van (mini)conda: <https://lab-microcontrollers.netlify.app/lab-1/#goal>
-- Installeren van mbed: <https://lab-microcontrollers.netlify.app/lab-1/#mbed>
-- Installeren van KiCad: <https://www.kicad.org/download/windows/> // CERN Switzerland
-- Installeren van SolidEdge: <https://www.academicsoftware.eu/software/25/292>
-
-Zorg er ook voor dat miniconda is toegevoegd aan je omgevings variabelen: bv. C:\Users\thybr\miniconda3\Scripts
-
+- Compileren van de code
+```bash 
+mbed compile -f
+```
 ## Opstelling Cap 
 
 Deze opstelling is voor het testen van de schakeling die in de cap gaat. Dit wordt vervangen door de zelf gemaakte pcb in de volgende fase.
