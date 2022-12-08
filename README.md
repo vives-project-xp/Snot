@@ -35,9 +35,9 @@ Zorg er ook voor dat miniconda is toegevoegd aan je omgevings variabelen: bv. C:
 ## Code
 
 Voor het binnenhalen van de code en overige:
-´´´bash
+```bash
 git clone git@github.com:vives-project-xp/Snot.git
-´´´
+```
 
 De volledige code is terug te vinden onder de file 'mbed'.
 Indien je de schakeling wil testen zonder de NFC maar enkel met drukknoppen moet je de file 'cap' gebruiken
