@@ -191,22 +191,31 @@ namespace Helpers{
    return true;
   }
 
-  void Helper::blinkLedGood(void){
-    leds = 1;
+  void Helper::blinkLedGood(void* arg){
+    auto c_this = (Helper *) arg;
+    c_this->leds = 1;
     ThisThread::sleep_for(1000ms);
-    leds = 0;
+    c_this->leds = 0;
   }
-  void Helper::blinkLedBad(void){
-    while(true){
-      leds = !leds;
-      ThisThread::sleep_for(100ms);
+  void Helper::blinkLedBad(void* arg){
+    auto c_this = (Helper *) arg;
+    for(int i = 0; i < 10; i++){
+      c_this->leds = 1;
+      ThisThread::sleep_for(300ms);
+      c_this->leds = 0;
     }
   }
 
   void Helper::goodCard(void){
     openCap();
+    ledThread.start(callback(Helper::blinkLedGood, this));
     printf("good card\r\n");
     ThisThread::sleep_for(1s); // Need check comfortable wait time
+    closeCap();
+  }
+
+  void Helper::badCard(void){
+    ledThread.start(callback(blinkLedBad, this));
     closeCap();
   }
 }

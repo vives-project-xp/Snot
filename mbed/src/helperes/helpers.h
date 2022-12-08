@@ -29,12 +29,13 @@ namespace Helpers{
 
       // Call when a good card is detected, opens the servo in the cap
       void goodCard(void);
+      void badCard(void);
       // Checks if presented tag is a master tag
       bool checkMaster(uint8_t data[]);
 
       private:
-      void blinkLedGood(void);
-      void blinkLedBad(void);
+      static void blinkLedGood(void* arg);
+      static void blinkLedBad(void* arg);
 
       rtos::Thread ledThread;
       PN532* rfid;

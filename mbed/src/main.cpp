@@ -94,6 +94,7 @@ void loop() {
     for(int i = 0; i < 6; i++){ // later check for crash
         if(data[i] != password[i]){
             printf("Wrong card\r\n");
+            helper.badCard();
             ThisThread::sleep_for (200ms);
             return;
         }
