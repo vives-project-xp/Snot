@@ -27,15 +27,15 @@ Indien je de schakeling wil testen zonder de NFC maar enkel met drukknoppen moet
 Voor het compileren van de code:
 
 - Open powershell
-- Conda create mbed (zie installation guide conda)
-- Conda activate mbed (zie installation guide conda voor installatie extensies)
+- Conda create mbed (zie installation guide (mini)conda)
+- Conda activate mbed (zie installation guide (mini)conda voor installatie extensies)
 - mbed compile -f
 
 ## Benodigdheden Software
 
 - Installeren van Visual Studio Code: <https://code.visualstudio.com/> // + Benodigde extenties (zou moeten automatisch aanbieden welke je nodig hebt)
 - Installeren van python: <https://www.academicsoftware.eu/software/27/265> // Take the lastest STABLE release
-- Installeren van conda: <https://lab-microcontrollers.netlify.app/lab-1/#goal>
+- Installeren van (mini)conda: <https://lab-microcontrollers.netlify.app/lab-1/#goal>
 - Installeren van mbed: <https://lab-microcontrollers.netlify.app/lab-1/#mbed>
 - Installeren van KiCad: <https://www.kicad.org/download/windows/> // CERN Switzerland
 - Installeren van SolidEdge: <https://www.academicsoftware.eu/software/25/292>
