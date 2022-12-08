@@ -4,7 +4,7 @@ Safe Night Out Together
 
 ## Discord
 
-Join het discord kanaal voor alle info en vragen: [Discord](https://discord.gg/yxqGdPCh)
+Join het discord kanaal voor alle info en vragen: [Discord](https://discord.gg/33ayYHaHzA)
 
 ## Dop Design
 
