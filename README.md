@@ -59,7 +59,7 @@ Deze opstelling is voor het testen van de schakeling die in de cap gaat. Dit wor
 
 - Cap + valse bodem + dekseltje motor
 - STM32L467RG voor compilatie
-- PN532 (versie blauw) voor scannen van de NFC
+- PN532 (versie blauw) voor scannen van de NFC --> soort versie kan nog veranderen ondertussen
 - Zelfgemaakte PCB wanneer werken voor STM te vervangen (zou moeten in cap passen)
 - PN532 (versie rood) voor het scannen van de NFC (zou moeten in de cap passen)
 - Alle bestelde hardware + deze solderen op de zelf gemaakte PCB
