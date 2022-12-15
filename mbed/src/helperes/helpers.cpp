@@ -5,6 +5,7 @@ namespace Helpers{
 
   Helper::Helper(PN532 *rfid, Servo *cap, Led *led): rfid(rfid), cap(cap), led(led)
   {
+    led->clear();
   }
 
   void Helper::defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid){
@@ -190,31 +191,40 @@ namespace Helpers{
    return true;
   }
 
-  void Helper::blinkLedGood(void* arg){
-    auto c_this = (Helper *) arg;
-    c_this->led->green();
-    ThisThread::sleep_for(1000ms);
-    c_this->led->clear();
+  void Helper::setLed(Led * led){
+    this->led = led;
   }
-  void Helper::blinkLedBad(void* arg){
-    auto c_this = (Helper *) arg;
+
+  void Helper::blinkLedGood(){
+    // auto c_this = (Helper *) arg;
+    // led->green();
+    led->RGB(0,255,0);
+    ThisThread::sleep_for(1000ms);
+    led->clear();
+  }
+
+  void Helper::blinkLedBad(){
+    // auto c_this = (Helper *) arg;
     for(int i = 0; i < 10; i++){
-      c_this->led->red();
-      ThisThread::sleep_for(300ms);
-      c_this->led->clear();
+      led->red();
+      ThisThread::sleep_for(100ms);
+      led->clear();
+      ThisThread::sleep_for(100ms);
     }
   }
 
   void Helper::goodCard(void){
     openCap();
-    ledThread.start(callback(Helper::blinkLedGood, this));
+    // ledThread.start(callback(Helper::blinkLedGood, this));
     printf("good card\r\n");
-    ThisThread::sleep_for(1s); // Need check comfortable wait time
+    blinkLedGood();
+    // ThisThread::sleep_for(1100ms); // Need check comfortable wait time
+    // ledThread.join();
     closeCap();
   }
 
   void Helper::badCard(void){
-    ledThread.start(callback(blinkLedBad, this));
     closeCap();
+    blinkLedBad();
   }
 }

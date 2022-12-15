@@ -38,13 +38,12 @@ namespace Helpers{
       void setLed( Led *led);
 
       private:
-      static void blinkLedGood(void* arg);
-      static void blinkLedBad(void* arg);
+      void blinkLedGood(void);
+      void blinkLedBad(void);
 
       rtos::Thread ledThread;
       PN532* rfid;
       Servo* cap;
-      DigitalOut leds = LED1;
 
       Led* led;
   };
