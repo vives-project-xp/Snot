@@ -6,12 +6,8 @@ namespace Helpers {
     
   }
 
-<<<<<<< HEAD:mbed/src/helperes/helpers.cpp
   // Error log
   void Helper::defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid){
-=======
-  void Helper::defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid) {
->>>>>>> 4cf0bf22739a69662e38cff24a679fff334074a4:mbed/src/helpers/helpers.cpp
     printf("Found an ISO14443A card\r\n");
     printf("  UID Length: %d bytes\r\n", uidLength);
     printf("  UID Value: ");
@@ -33,13 +29,9 @@ namespace Helpers {
     printf("\r\n");
   } 
 
-<<<<<<< HEAD:mbed/src/helperes/helpers.cpp
   // Error log
   void Helper::unsupportedCard(uint8_t *uid, uint8_t uidLength){
 
-=======
-  void Helper::unsupportedCard(uint8_t *uid, uint8_t uidLength) {
->>>>>>> 4cf0bf22739a69662e38cff24a679fff334074a4:mbed/src/helpers/helpers.cpp
     printf("Found an ISO14443A card\r\n");
     printf("  UID Length: %d bytes\r\n", uidLength);
     printf("  UID Value: ");
@@ -49,14 +41,10 @@ namespace Helpers {
     printf("\r\n");
   }
 
-<<<<<<< HEAD:mbed/src/helperes/helpers.cpp
   // Call it only after authorization
   // Check's if password is correct
   bool Helper::checkMaster(uint8_t data[]){
     
-=======
-  bool Helper::checkMaster(uint8_t data[]) {
->>>>>>> 4cf0bf22739a69662e38cff24a679fff334074a4:mbed/src/helpers/helpers.cpp
     uint8_t masterPass[3] { 0x34,0x35,0x36 };
 
     //check password
@@ -80,12 +68,8 @@ namespace Helpers {
     cap->write(0);
   }
 
-<<<<<<< HEAD:mbed/src/helperes/helpers.cpp
   // KeyA setter
   bool Helper::setKey(uint8_t uid[], uint8_t uidLength, uint8_t password[]){
-=======
-  bool Helper::setKey(uint8_t uid[], uint8_t uidLength, uint8_t password[]) {
->>>>>>> 4cf0bf22739a69662e38cff24a679fff334074a4:mbed/src/helpers/helpers.cpp
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
 
    bool success = rfid->mifareclassic_AuthenticateBlock(uid, uidLength, 11, 0, oldKeyA);
@@ -114,13 +98,9 @@ namespace Helpers {
    return true;
   }
 
-<<<<<<< HEAD:mbed/src/helperes/helpers.cpp
   // Set default master card
   bool Helper::setMaster(uint8_t uid[], uint8_t uidLength){
 
-=======
-  bool Helper::setMaster(uint8_t uid[], uint8_t uidLength) {
->>>>>>> 4cf0bf22739a69662e38cff24a679fff334074a4:mbed/src/helpers/helpers.cpp
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
     uint8_t masterPass[3] { 0x34,0x35,0x36 };
    bool success = rfid->mifareclassic_AuthenticateBlock(uid, uidLength, 11, 0, oldKeyA);
@@ -150,12 +130,8 @@ namespace Helpers {
    return true;
   }
 
-<<<<<<< HEAD:mbed/src/helperes/helpers.cpp
   // Set card with default password
   bool Helper::setGood(uint8_t uid[], uint8_t uidLength ){
-=======
-  bool Helper::setGood(uint8_t uid[], uint8_t uidLength ) {
->>>>>>> 4cf0bf22739a69662e38cff24a679fff334074a4:mbed/src/helpers/helpers.cpp
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
     uint8_t password[6] = { 0x31, 0x32, 0x33, 0x34, 0x35, 0x36 };
    bool success = rfid->mifareclassic_AuthenticateBlock(uid, uidLength, 11, 0, oldKeyA);
@@ -185,12 +161,8 @@ namespace Helpers {
    return true;
   }
 
-<<<<<<< HEAD:mbed/src/helperes/helpers.cpp
   // set card with different password
   bool Helper::setBad(uint8_t uid[], uint8_t uidLength ){
-=======
-  bool Helper::setBad(uint8_t uid[], uint8_t uidLength ) {
->>>>>>> 4cf0bf22739a69662e38cff24a679fff334074a4:mbed/src/helpers/helpers.cpp
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
     uint8_t password[6] = {0x31,0x32,0x33,0x35,0x34,0x36};
    bool success = rfid->mifareclassic_AuthenticateBlock(uid, uidLength, 11, 0, oldKeyA);

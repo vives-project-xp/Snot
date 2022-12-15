@@ -1,23 +1,15 @@
 #include "Led.h"
 
-<<<<<<< HEAD:mbed/src/helperes/Led.cpp
  // Led controls are reversed
 namespace Helpers{
 
-=======
-namespace Helpers {
->>>>>>> 4cf0bf22739a69662e38cff24a679fff334074a4:mbed/src/helpers/Led.cpp
   Led::Led(PwmOut* red, PwmOut* green, PwmOut* blue): _red(red), _green(green), _blue(blue)
   {
     this->clear();
   }
 
-<<<<<<< HEAD:mbed/src/helperes/Led.cpp
  
   void Led::red(void){
-=======
-  void Led::red(void) {
->>>>>>> 4cf0bf22739a69662e38cff24a679fff334074a4:mbed/src/helpers/Led.cpp
     _red->write(0);
     _green->write(1);
     _blue->write(1);
@@ -41,12 +33,8 @@ namespace Helpers {
     _blue->write(1);
   }
 
-<<<<<<< HEAD:mbed/src/helperes/Led.cpp
   void Led::RGB(int red, int green, int blue){
     // guards
-=======
-  void Led::RGB(int red, int green, int blue) {
->>>>>>> 4cf0bf22739a69662e38cff24a679fff334074a4:mbed/src/helpers/Led.cpp
     if(red > 255 || red < 0) return;
     if(green > 255 || green < 0) return;
     if(blue > 255 || blue < 0) return;
@@ -61,8 +49,4 @@ namespace Helpers {
     _green->write(gValue);
     _blue->write(bValue);
   }
-<<<<<<< HEAD:mbed/src/helperes/Led.cpp
 }
-=======
-}
->>>>>>> 4cf0bf22739a69662e38cff24a679fff334074a4:mbed/src/helpers/Led.cpp
