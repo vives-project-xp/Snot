@@ -8,9 +8,9 @@
 PN532 m_rfid(D11, D12, D13, D10);
 Servo m_cap(D9);
 
-PwmOut red(A1);
-PwmOut green(A2);
-PwmOut blue(A3);
+PwmOut red(PA_1);
+PwmOut green(PB_0);
+PwmOut blue(D6);
 
 Helpers::Led led(&red, &green, &blue);
 
