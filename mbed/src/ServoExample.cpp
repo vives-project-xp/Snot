@@ -2,7 +2,6 @@
 #include "mbed.h"
 #include "Servo.h"
 
-
 PwmOut motorFwd(D5);
 PwmOut motorRev(D6); 
 Servo myservo(D9);
