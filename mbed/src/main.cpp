@@ -82,7 +82,14 @@ void loop() {
     // check master card
     if(helper.checkMaster(data)){
         firstCard = true;
-        helper.goodCard();
+        helper.openCap();
+        for(int i = 0; i < 3; i++){
+            helper.led->green();
+            ThisThread::sleep_for(50ms);
+            helper.led->red();
+            ThisThread::sleep_for(50ms);
+        }
+        helper.led->clear();
         return;
     }
 

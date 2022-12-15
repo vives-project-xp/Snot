@@ -36,7 +36,8 @@ namespace Helpers{
 
       // set Pointer to Led object
       void setLed( Led *led);
-
+      Led* led;
+      
       private:
       void blinkLedGood(void);
       void blinkLedBad(void);
@@ -45,7 +46,7 @@ namespace Helpers{
       PN532* rfid;
       Servo* cap;
 
-      Led* led;
+      
   };
   
 
