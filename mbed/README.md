@@ -67,3 +67,14 @@ default values for everyone of them.
 
 By first changing every cards keyA to sector2 to other than manufacturers default key
 and put password in the 8th block.
+
+## Light Signals
+
+Fast blinking green light = saving new card
+Green light = good card
+
+Flashing red light = bad card
+
+Flashing green and red light = master card
+
+Constant blue light = pn532 board not found
