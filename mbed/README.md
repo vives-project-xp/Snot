@@ -16,6 +16,7 @@ The board communicates with the PN532 through the SPI protocol. On startup it en
 
 Project was tested on:
 compiler: 10.3.1
+
 > mbed ls
   mbed ( revision in the current branch)
   `- mbed-os (#54e8693ef4ff, tags: mbed-os-6.16.0, mbed-os-6.16.0-rc1)
