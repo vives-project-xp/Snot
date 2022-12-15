@@ -24,6 +24,8 @@ uint8_t password[6] = { 0 };
 int main() {
     printf("Hello!\r\n");
         // Checks if it can detect the PN532 shield
+        // if not found check if you use SPI or I2C
+        // and your wires
         uint32_t versiondata = m_rfid.getFirmwareVersion();
         if (!versiondata) {
             printf("Didn't find PN53x board\r\n");
@@ -42,16 +44,19 @@ int main() {
     }
 }
 
-
+// Main loop
 void loop() {
     
     bool success;
     uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
     uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
     uint8_t keyA[6] = { 0x31, 0x32, 0x33, 0x00,0x00,0x00};
+
     // Wait for an ISO14443A type cards (Mifare, etc.).  When one is found
     // 'uid' will be populated with the UID, and uidLength will indicate
     // if the uid is 4 bytes (Mifare Classic) or 7 bytes (Mifare Ultralight)
+
+    // tldr; waits for card
     success = m_rfid.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
     
     
@@ -66,7 +71,7 @@ void loop() {
     cardid |= uid[3];
 
 
-    // default user keyA
+    // Authenticate with default keyA set by me :)
     success = m_rfid.mifareclassic_AuthenticateBlock(uid, uidLength, 8, 0, keyA);
     if (!success) {helper.error(uid, uidLength, cardid); return;}
 
@@ -76,13 +81,15 @@ void loop() {
     success = m_rfid.mifareclassic_ReadDataBlock(8, data);
     if (!success) {helper.error(uid, uidLength, cardid); return; }
     
-    // Display some basic information about the card
-    // defaultCardInfo(uid, uidLength, cardid);
+    // Uncomment to display some basic information about the card
+    // helper.defaultCardInfo(uid, uidLength, cardid);
 
     // check master card
+    // if master card found, look for new card to save passowrd
     if(helper.checkMaster(data)){
         firstCard = true;
         helper.openCap();
+        // Show with lights that master card is found
         for(int i = 0; i < 3; i++){
             helper.led->green();
             ThisThread::sleep_for(50ms);
@@ -93,7 +100,7 @@ void loop() {
         return;
     }
 
-    // if firstcard save password
+    // if firstcard save password inside
     if(firstCard){
         for(int i = 0; i < 6; i++){
             password[i] = data[i];

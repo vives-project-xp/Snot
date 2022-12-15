@@ -6,10 +6,11 @@
 namespace Helpers{
   class Led{
 
-
     public:
     Led(PwmOut* red, PwmOut* green, PwmOut* blue);
-
+    
+    // preset colors
+    
     void red();
     void green();
     void blue();
@@ -23,8 +24,5 @@ namespace Helpers{
       PwmOut* _red;
       PwmOut* _green;
       PwmOut* _blue;
-
-
-      
   };
 }

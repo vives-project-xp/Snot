@@ -5,9 +5,10 @@ namespace Helpers{
 
   Helper::Helper(PN532 *rfid, Servo *cap, Led *led): rfid(rfid), cap(cap), led(led)
   {
-    led->clear();
+    
   }
 
+  // Error log
   void Helper::defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid){
     printf("Found an ISO14443A card\r\n");
     printf("  UID Length: %d bytes\r\n", uidLength);
@@ -18,6 +19,7 @@ namespace Helpers{
     printf("\r\n");
   }
 
+  // Error log
   void Helper::error(uint8_t *uid, uint8_t uidLength, uint32_t cardid) { 
 
     printf("Found an ISO14443A card\r\n");
@@ -30,6 +32,7 @@ namespace Helpers{
     printf("\r\n");
   } 
 
+  // Error log
   void Helper::unsupportedCard(uint8_t *uid, uint8_t uidLength){
 
     printf("Found an ISO14443A card\r\n");
@@ -41,6 +44,8 @@ namespace Helpers{
     printf("\r\n");
   }
 
+  // Call it only after authorization
+  // Check's if password is correct
   bool Helper::checkMaster(uint8_t data[]){
     
     uint8_t masterPass[3] { 0x34,0x35,0x36 };
@@ -66,6 +71,7 @@ namespace Helpers{
     cap->write(0);
   }
 
+  // KeyA setter
   bool Helper::setKey(uint8_t uid[], uint8_t uidLength, uint8_t password[]){
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
 
@@ -98,6 +104,7 @@ namespace Helpers{
    return true;
   }
 
+  // Set default master card
   bool Helper::setMaster(uint8_t uid[], uint8_t uidLength){
 
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
@@ -130,6 +137,7 @@ namespace Helpers{
    return true;
   }
 
+  // Set card with default password
   bool Helper::setGood(uint8_t uid[], uint8_t uidLength ){
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
     uint8_t password[6] = { 0x31, 0x32, 0x33, 0x34, 0x35, 0x36 };
@@ -162,9 +170,10 @@ namespace Helpers{
    return true;
   }
 
+  // set card with different password
   bool Helper::setBad(uint8_t uid[], uint8_t uidLength ){
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
-    uint8_t password[6] = {0x31,0x32,0x33,0x35,0x34, 0x36};
+    uint8_t password[6] = {0x31,0x32,0x33,0x35,0x34,0x36};
    bool success = rfid->mifareclassic_AuthenticateBlock(uid, uidLength, 11, 0, oldKeyA);
    if(!success){
        printf("Couldn't authenticate, try other key?\n");
