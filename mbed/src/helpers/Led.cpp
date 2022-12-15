@@ -1,7 +1,7 @@
 #include "Led.h"
 
 // Led controls are reversed
-namespace Helpers{
+namespace Helpers {
 
     Led::Led(PwmOut* red, PwmOut* green, PwmOut* blue): _red(red), _green(green), _blue(blue) {
         this->clear();
