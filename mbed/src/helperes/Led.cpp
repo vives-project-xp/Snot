@@ -11,20 +11,26 @@ namespace Helpers{
   void Led::red(void){
     _red->write(1);
     _green->write(0);
-    _blue->wrie(0);
+    _blue->write(0);
   }
 
   void Led::green(void){
     _red->write(0);
     _green->write(1);
-    _blue->wrie(0);
+    _blue->write(0);
   }
 
   void Led::blue(void){
     _red->write(0);
     _green->write(0);
-    _blue->wrie(1);
+    _blue->write(1);
 
+  }
+
+  void Led::clear(void){
+    _red->write(0);
+    _green->write(0);
+    _blue->write(0);
   }
 
   void Led::RGB(int red, int green, int blue){

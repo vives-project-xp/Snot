@@ -3,9 +3,8 @@
 
 namespace Helpers{
 
-  Helper::Helper(PN532 *rfid, Servo *cap): rfid(rfid), cap(cap)
+  Helper::Helper(PN532 *rfid, Servo *cap, Led *led): rfid(rfid), cap(cap), led(led)
   {
-    
   }
 
   void Helper::defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid){
@@ -193,16 +192,16 @@ namespace Helpers{
 
   void Helper::blinkLedGood(void* arg){
     auto c_this = (Helper *) arg;
-    c_this->leds = 1;
+    c_this->led->green();
     ThisThread::sleep_for(1000ms);
-    c_this->leds = 0;
+    c_this->led->clear();
   }
   void Helper::blinkLedBad(void* arg){
     auto c_this = (Helper *) arg;
     for(int i = 0; i < 10; i++){
-      c_this->leds = 1;
+      c_this->led->red();
       ThisThread::sleep_for(300ms);
-      c_this->leds = 0;
+      c_this->led->clear();
     }
   }
 

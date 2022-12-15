@@ -2,12 +2,19 @@
 #include "pn532.h"
 #include "Servo.h"
 #include "helpers.h"
-
+#include "Led.h"
 
 //add thread for led blinking
 PN532 m_rfid(D11, D12, D13, D10);
 Servo m_cap(D9);
-Helpers::Helper helper(&m_rfid, &m_cap);
+
+PwmOut red(A1);
+PwmOut green(A2);
+PwmOut blue(A3);
+
+Helpers::Led led(&red, &green, &blue);
+
+Helpers::Helper helper(&m_rfid, &m_cap, &led);
 
 bool firstCard = true;
 void loop();

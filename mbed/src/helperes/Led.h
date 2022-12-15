@@ -1,4 +1,5 @@
 // convert RGB (0-255) to V
+#pragma once
 #include "mbed.h"
 
 
@@ -12,6 +13,7 @@ namespace Helpers{
     void red();
     void green();
     void blue();
+    void clear();
 
     // RGB value 0-255
     void RGB(int red, int green, int blue);

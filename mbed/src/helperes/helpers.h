@@ -2,6 +2,7 @@
 #include "mbed.h"
 #include "pn532.h"
 #include "Servo.h"
+#include "Led.h"
 #include "Thread.h"
 
 
@@ -10,7 +11,7 @@ namespace Helpers{
 
     public:
 
-      Helper(PN532 *rfid, Servo *cap);
+      Helper(PN532 *rfid, Servo *cap, Led* led);
       // rfid functions from pn532.h
       void defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid);
       void error(uint8_t *uid, uint8_t uidLength, uint32_t cardid);
@@ -33,6 +34,9 @@ namespace Helpers{
       // Checks if presented tag is a master tag
       bool checkMaster(uint8_t data[]);
 
+      // set Pointer to Led object
+      void setLed( Led *led);
+
       private:
       static void blinkLedGood(void* arg);
       static void blinkLedBad(void* arg);
@@ -41,6 +45,8 @@ namespace Helpers{
       PN532* rfid;
       Servo* cap;
       DigitalOut leds = LED1;
+
+      Led* led;
   };
   
 
