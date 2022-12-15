@@ -48,15 +48,15 @@ Check comments <3
 [Download link to PDF for Mifare datasheet](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwinrZe82vv7AhWFOOwKHfq8ARMQFnoECA0QAQ&url=https%3A%2F%2Fshop.sonmicro.com%2FDownloads%2FMIFARECLASSIC-UM.pdf&usg=AOvVaw2tvONHw50oQ-4uPCvlGSDR)
 
 On page 3 you can see memory map for this card.
-As u can see this card has 16 secotrs with 4 blocks in each sector.
+As u can see this card has 16 sectors with 4 blocks in each sector.
 
 In first sector is manufacturer data that is read-only
 
 In first 3 blocks of each sector u can put any data u want within 2bytes.
-The 4th block is reserved for keyA, Access Bits and keyB.
+The 4th block is serverd for keyA, Access Bits and keyB.
 
 KeyA and KeyB are sort of "passwords" for the entire sector.
-ex. If u would change KeyA in block 7, U'll have to authenticate
+ex. If you would change KeyA in block 7, you'll have to authenticate
 blocks from 4-7 with the new key.
 
 Access bits change how they keys are read so if u don't know what you're doing
@@ -65,5 +65,5 @@ best keep these they way they or you can lock your self out of the sector.
 They way we work with the card is we first use the helper.set... method to set each card with
 default values for everyone of them.
 
-By first chagning every cards keyA to sector2 to other than manufacturers default key
+By first changing every cards keyA to sector2 to other than manufacturers default key
 and put password in the 8th block.
