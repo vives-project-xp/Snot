@@ -53,7 +53,7 @@ As u can see this card has 16 secotrs with 4 blocks in each sector.
 In first sector is manufacturer data that is read-only
 
 In first 3 blocks of each sector u can put any data u want within 2bytes.
-The 4th block is serverd for keyA, Access Bits and keyB.
+The 4th block is reserved for keyA, Access Bits and keyB.
 
 KeyA and KeyB are sort of "passwords" for the entire sector.
 ex. If u would change KeyA in block 7, U'll have to authenticate
