@@ -60,9 +60,9 @@ ex. If you would change KeyA in block 7, you'll have to authenticate
 blocks from 4-7 with the new key.
 
 Access bits change how they keys are read so if u don't know what you're doing
-best keep these they way they or you can lock your self out of the sector.
+best keep these the way they or you can lock your self out of the sector.
 
-They way we work with the card is we first use the helper.set... method to set each card with
+The way we work with the card is we first use the helper.set... method to set each card with
 default values for everyone of them.
 
 By first changing every cards keyA to sector2 to other than manufacturers default key
