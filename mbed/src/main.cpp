@@ -29,6 +29,7 @@ int main() {
         uint32_t versiondata = m_rfid.getFirmwareVersion();
         if (!versiondata) {
             printf("Didn't find PN53x board\r\n");
+            helper.led->blue();
             while(1);
         }
 
