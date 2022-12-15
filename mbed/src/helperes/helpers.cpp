@@ -197,8 +197,7 @@ namespace Helpers{
 
   void Helper::blinkLedGood(){
     // auto c_this = (Helper *) arg;
-    // led->green();
-    led->RGB(0,255,0);
+    led->green();
     ThisThread::sleep_for(1000ms);
     led->clear();
   }
