@@ -10,7 +10,7 @@ Servo m_cap(D9);
 
 PwmOut red(PA_1);
 PwmOut green(PB_0);
-PwmOut blue(D6);
+PwmOut blue(D6);  // should be PB_3
 
 Helpers::Led led(&red, &green, &blue);
 
@@ -23,12 +23,12 @@ uint8_t password[6] = { 0 };
 
 int main() {
     printf("Hello!\r\n");
-        // Checks if it can detect the PN532 shield
-        uint32_t versiondata = m_rfid.getFirmwareVersion();
-        if (!versiondata) {
-            printf("Didn't find PN53x board\r\n");
-            while(1);
-        }
+    // Checks if it can detect the PN532 shield
+    uint32_t versiondata = m_rfid.getFirmwareVersion();
+    if (!versiondata) {
+        printf("Didn't find PN53x board\r\n");
+        while(1);
+    }
 
     printf("Found chip PN5%lx\r\n", ((versiondata>>24) & 0xFF));
     printf("Firmware ver. %lu.%lu\r\n", (versiondata>>16) & 0xFF, (versiondata>>8) & 0xFF);
@@ -42,9 +42,7 @@ int main() {
     }
 }
 
-
 void loop() {
-    
     bool success;
     uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
     uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
@@ -53,8 +51,7 @@ void loop() {
     // 'uid' will be populated with the UID, and uidLength will indicate
     // if the uid is 4 bytes (Mifare Classic) or 7 bytes (Mifare Ultralight)
     success = m_rfid.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
-    
-    
+
     if (uidLength != 4) {helper.unsupportedCard(uid, uidLength); return;} 
     // We probably have a Mifare Classic card ...
     uint32_t cardid = uid[0];
@@ -64,7 +61,6 @@ void loop() {
     cardid |= uid[2];
     cardid <<= 8;
     cardid |= uid[3];
-
 
     // default user keyA
     success = m_rfid.mifareclassic_AuthenticateBlock(uid, uidLength, 8, 0, keyA);
@@ -80,7 +76,7 @@ void loop() {
     // defaultCardInfo(uid, uidLength, cardid);
 
     // check master card
-    if(helper.checkMaster(data)){
+    if(helper.checkMaster(data)) {
         firstCard = true;
         helper.openCap();
         for(int i = 0; i < 3; i++){
@@ -94,7 +90,7 @@ void loop() {
     }
 
     // if firstcard save password
-    if(firstCard){
+    if(firstCard) {
         for(int i = 0; i < 6; i++){
             password[i] = data[i];
         }
@@ -105,7 +101,7 @@ void loop() {
     }
 
     // check if password in block 4 is correct
-    for(int i = 0; i < 6; i++){ // later check for crash
+    for(int i = 0; i < 6; i++) { // later check for crash
         if(data[i] != password[i]){
 
             helper.badCard();
@@ -115,5 +111,4 @@ void loop() {
     }
 
     helper.goodCard();
-
 }

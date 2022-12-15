@@ -3,10 +3,8 @@
 #include "mbed.h"
 
 
-namespace Helpers{
-  class Led{
-
-
+namespace Helpers {
+  class Led {
     public:
     Led(PwmOut* red, PwmOut* green, PwmOut* blue);
 
@@ -18,13 +16,9 @@ namespace Helpers{
     // RGB value 0-255
     void RGB(int red, int green, int blue);
 
-
     private:
       PwmOut* _red;
       PwmOut* _green;
-      PwmOut* _blue;
-
-
-      
+      PwmOut* _blue;  
   };
 }

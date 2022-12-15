@@ -1,14 +1,12 @@
 #include "helpers.h"
 
-
-namespace Helpers{
-
+namespace Helpers {
   Helper::Helper(PN532 *rfid, Servo *cap, Led *led): rfid(rfid), cap(cap), led(led)
   {
     led->clear();
   }
 
-  void Helper::defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid){
+  void Helper::defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid) {
     printf("Found an ISO14443A card\r\n");
     printf("  UID Length: %d bytes\r\n", uidLength);
     printf("  UID Value: ");
@@ -19,7 +17,6 @@ namespace Helpers{
   }
 
   void Helper::error(uint8_t *uid, uint8_t uidLength, uint32_t cardid) { 
-
     printf("Found an ISO14443A card\r\n");
     printf("  UID Length: %d bytes\r\n", uidLength);
     printf("  UID Value: ");
@@ -30,8 +27,7 @@ namespace Helpers{
     printf("\r\n");
   } 
 
-  void Helper::unsupportedCard(uint8_t *uid, uint8_t uidLength){
-
+  void Helper::unsupportedCard(uint8_t *uid, uint8_t uidLength) {
     printf("Found an ISO14443A card\r\n");
     printf("  UID Length: %d bytes\r\n", uidLength);
     printf("  UID Value: ");
@@ -41,8 +37,7 @@ namespace Helpers{
     printf("\r\n");
   }
 
-  bool Helper::checkMaster(uint8_t data[]){
-    
+  bool Helper::checkMaster(uint8_t data[]) {
     uint8_t masterPass[3] { 0x34,0x35,0x36 };
 
     //check password
@@ -62,11 +57,11 @@ namespace Helpers{
     led->clear();
   }
 
-  void Helper::openCap(){
+  void Helper::openCap() {
     cap->write(0);
   }
 
-  bool Helper::setKey(uint8_t uid[], uint8_t uidLength, uint8_t password[]){
+  bool Helper::setKey(uint8_t uid[], uint8_t uidLength, uint8_t password[]) {
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
 
    bool success = rfid->mifareclassic_AuthenticateBlock(uid, uidLength, 11, 0, oldKeyA);
@@ -74,22 +69,19 @@ namespace Helpers{
        printf("Couldn't authenticate, try other key?\n");
        return false;
    }
-
-
    
    uint8_t newKeyA[16] = { 0x31, 0x32, 0x33, 0x00, 0x00, 0x00, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
    // set new KeyA
    success = rfid->mifareclassic_WriteDataBlock(11, newKeyA);
 
-   if(!success){
+   if(!success) {
        printf("Something went wrong and couldn't write new Key\n");
        return false;
    }
 
    // write new user password to block 8
-   
    success = rfid->mifareclassic_WriteDataBlock(8, password);
-   if(!success){
+   if(!success) {
        printf("Couldn't change password");
        return false;
    }
@@ -98,8 +90,7 @@ namespace Helpers{
    return true;
   }
 
-  bool Helper::setMaster(uint8_t uid[], uint8_t uidLength){
-
+  bool Helper::setMaster(uint8_t uid[], uint8_t uidLength) {
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
     uint8_t masterPass[3] { 0x34,0x35,0x36 };
    bool success = rfid->mifareclassic_AuthenticateBlock(uid, uidLength, 11, 0, oldKeyA);
@@ -108,20 +99,19 @@ namespace Helpers{
        return false;
    }
 
-
    // uint8_t defaultAcces[4] = {0xFF, 0x07, 0x80, 0x69};
    uint8_t newKeyA[16] = { 0x31, 0x32, 0x33, 0x00, 0x00, 0x00, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
    // set new KeyA
    success = rfid->mifareclassic_WriteDataBlock(11, newKeyA);
 
-   if(!success){
+   if(!success) {
        printf("Something went wrong and couldn't write new Key\n");
        return false;
    }
 
    // write new user password to block 4
    success = rfid->mifareclassic_WriteDataBlock(8, masterPass);
-   if(!success){
+   if(!success) {
        printf("Couldn't change password");
        return false;
    }
@@ -130,30 +120,28 @@ namespace Helpers{
    return true;
   }
 
-  bool Helper::setGood(uint8_t uid[], uint8_t uidLength ){
+  bool Helper::setGood(uint8_t uid[], uint8_t uidLength ) {
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
     uint8_t password[6] = { 0x31, 0x32, 0x33, 0x34, 0x35, 0x36 };
    bool success = rfid->mifareclassic_AuthenticateBlock(uid, uidLength, 11, 0, oldKeyA);
-   if(!success){
+   if(!success) {
        printf("Couldn't authenticate, try other key?\n");
        return false;
    }
-
 
    // uint8_t defaultAcces[4] = {0xFF, 0x07, 0x80, 0x69};
    uint8_t newKeyA[16] = { 0x31, 0x32, 0x33, 0x00, 0x00, 0x00, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
    // set new KeyA
    success = rfid->mifareclassic_WriteDataBlock(11, newKeyA);
 
-   if(!success){
+   if(!success) {
        printf("Something went wrong and couldn't write new Key\n");
        return false;
    }
 
    // write new user password to block 4
-   
    success = rfid->mifareclassic_WriteDataBlock(8, password);
-   if(!success){
+   if(!success) {
        printf("Couldn't change password");
        return false;
    }
@@ -162,30 +150,28 @@ namespace Helpers{
    return true;
   }
 
-  bool Helper::setBad(uint8_t uid[], uint8_t uidLength ){
+  bool Helper::setBad(uint8_t uid[], uint8_t uidLength ) {
    uint8_t oldKeyA[6] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
     uint8_t password[6] = {0x31,0x32,0x33,0x35,0x34, 0x36};
    bool success = rfid->mifareclassic_AuthenticateBlock(uid, uidLength, 11, 0, oldKeyA);
-   if(!success){
+   if(!success) {
        printf("Couldn't authenticate, try other key?\n");
        return false;
    }
-
 
    // uint8_t defaultAcces[4] = {0xFF, 0x07, 0x80, 0x69};
    uint8_t newKeyA[16] = { 0x31, 0x32, 0x33, 0x00, 0x00, 0x00, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
    // set new KeyA
    success = rfid->mifareclassic_WriteDataBlock(11, newKeyA);
 
-   if(!success){
+   if(!success) {
        printf("Something went wrong and couldn't write new Key\n");
        return false;
    }
 
    // write new user password to block 4
-   
    success = rfid->mifareclassic_WriteDataBlock(8, password);
-   if(!success){
+   if(!success) {
        printf("Couldn't change password");
        return false;
    }
@@ -194,11 +180,11 @@ namespace Helpers{
    return true;
   }
 
-  void Helper::setLed(Led * led){
+  void Helper::setLed(Led * led) {
     this->led = led;
   }
 
-  void Helper::blinkLedGood(){
+  void Helper::blinkLedGood() {
     // auto c_this = (Helper *) arg;
     led->green();
     ThisThread::sleep_for(1000ms);
@@ -206,7 +192,7 @@ namespace Helpers{
     ThisThread::sleep_for(1000ms);
   }
 
-  void Helper::blinkLedBad(){
+  void Helper::blinkLedBad() {
     // auto c_this = (Helper *) arg;
     for(int i = 0; i < 10; i++){
       led->red();
@@ -216,14 +202,14 @@ namespace Helpers{
     }
   }
 
-  void Helper::goodCard(void){
+  void Helper::goodCard(void) {
     openCap();
     printf("good card\r\n");
     blinkLedGood();
     closeCap();
   }
 
-  void Helper::badCard(void){
+  void Helper::badCard(void) {
     closeCap();
     printf("Wrong card\r\n");
     blinkLedBad();
