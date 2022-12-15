@@ -4,24 +4,24 @@
 
 
 namespace Helpers{
-  class Led{
+    class Led{
 
-    public:
-    Led(PwmOut* red, PwmOut* green, PwmOut* blue);
-    
-    // preset colors
-    
-    void red();
-    void green();
-    void blue();
-    void clear();
+        public:
+            Led(PwmOut* red, PwmOut* green, PwmOut* blue);
+            
+            // preset colors
+            
+            void red();
+            void green();
+            void blue();
+            void clear();
 
-    // RGB value 0-255
-    void RGB(int red, int green, int blue);
+            // RGB value 0-255
+            void RGB(int red, int green, int blue);
 
-    private:
-      PwmOut* _red;
-      PwmOut* _green;
-      PwmOut* _blue;
-  };
+        private:
+            PwmOut* _red;
+            PwmOut* _green;
+            PwmOut* _blue;
+    };
 }
