@@ -5,12 +5,9 @@
 #include "Led.h"
 #include "Thread.h"
 
-
-namespace Helpers{
-  class Helper{
-
+namespace Helpers {
+  class Helper {
     public:
-
       Helper(PN532 *rfid, Servo *cap, Led* led);
       // rfid functions from pn532.h
       void defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid);
@@ -45,10 +42,5 @@ namespace Helpers{
       rtos::Thread ledThread;
       PN532* rfid;
       Servo* cap;
-
-      
   };
-  
-
-
 }

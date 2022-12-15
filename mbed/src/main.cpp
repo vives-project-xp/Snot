@@ -10,7 +10,7 @@ Servo m_cap(D9);
 
 PwmOut red(PA_1);
 PwmOut green(PB_0);
-PwmOut blue(D6);
+PwmOut blue(D6);  // should be PB_3
 
 Helpers::Led led(&red, &green, &blue);
 
@@ -46,7 +46,6 @@ int main() {
 
 // Main loop
 void loop() {
-    
     bool success;
     uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
     uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
@@ -58,8 +57,7 @@ void loop() {
 
     // tldr; waits for card
     success = m_rfid.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
-    
-    
+
     if (uidLength != 4) {helper.unsupportedCard(uid, uidLength); return;} 
     // We probably have a Mifare Classic card ...
     uint32_t cardid = uid[0];
@@ -112,7 +110,7 @@ void loop() {
     }
 
     // check if password in block 4 is correct
-    for(int i = 0; i < 6; i++){ // later check for crash
+    for(int i = 0; i < 6; i++) { // later check for crash
         if(data[i] != password[i]){
 
             helper.badCard();
@@ -122,5 +120,4 @@ void loop() {
     }
 
     helper.goodCard();
-
 }
