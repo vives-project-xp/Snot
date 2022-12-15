@@ -40,7 +40,7 @@ int main() {
 
     printf("Waiting for an ISO14443A Card ...\r\n");
 
-    while (1) {
+    while (true) {
         loop();
     }
 }
@@ -78,8 +78,6 @@ void loop() {
     // helper.setBad(uid, uidLength);
     // return;
 
-
-
     // Authenticate with default keyA set by me :)
     success = m_rfid.mifareclassic_AuthenticateBlock(uid, uidLength, 8, 0, keyA);
     if (!success) {helper.error(uid, uidLength, cardid); return;}
@@ -95,7 +93,7 @@ void loop() {
 
     // check master card
     // if master card found, look for new card to save passowrd
-    if(helper.checkMaster(data)){
+    if(helper.checkMaster(data)) {
         firstCard = true;
         helper.openCap();
         // Show with lights that master card is found
@@ -110,7 +108,7 @@ void loop() {
     }
 
     // if firstcard save password inside
-    if(firstCard){
+    if(firstCard) {
         for(int i = 0; i < 6; i++){
             password[i] = data[i];
         }
@@ -123,7 +121,6 @@ void loop() {
     // check if password in block 4 is correct
     for(int i = 0; i < 6; i++) { // later check for crash
         if(data[i] != password[i]){
-
             helper.badCard();
             ThisThread::sleep_for (200ms);
             return;

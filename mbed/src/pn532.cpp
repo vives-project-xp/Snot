@@ -1,45 +1,45 @@
 /**************************************************************************/
 /*!
-  @file     pn532.cpp
-  @author   Adafruit Industries
-  @license  BSD (see license.txt)
+    @file     pn532.cpp
+    @author   Adafruit Industries
+    @license  BSD (see license.txt)
 
-  Driver for NXP's PN532 NFC/13.56MHz RFID Transceiver
+    Driver for NXP's PN532 NFC/13.56MHz RFID Transceiver
 
-  This is a library for the Adafruit PN532 NFC/RFID breakout boards
-  This library works with the Adafruit NFC breakout
-  ----> https://www.adafruit.com/products/364
+    This is a library for the Adafruit PN532 NFC/RFID breakout boards
+    This library works with the Adafruit NFC breakout
+    ----> https://www.adafruit.com/products/364
 
-  Check out the links above for our tutorials and wiring diagrams
-  These chips use SPI or I2C to communicate.
+    Check out the links above for our tutorials and wiring diagrams
+    These chips use SPI or I2C to communicate.
 
-  Adafruit invests time and resources providing this open source code,
-  please support Adafruit and open-source hardware by purchasing
-  products from Adafruit!
+    Adafruit invests time and resources providing this open source code,
+    please support Adafruit and open-source hardware by purchasing
+    products from Adafruit!
 
-  @section  HISTORY
+    @section  HISTORY
 
-  v2.1 - Added NTAG2xx helper functions
+    v2.1 - Added NTAG2xx helper functions
 
-  v2.0 - Refactored to add I2C support from Adafruit_NFCShield_I2C library.
+    v2.0 - Refactored to add I2C support from Adafruit_NFCShield_I2C library.
 
-  v1.4 - Added setPassiveActivationRetries()
+    v1.4 - Added setPassiveActivationRetries()
 
-  v1.2 - Added writeGPIO()
-  - Added readGPIO()
+    v1.2 - Added writeGPIO()
+    - Added readGPIO()
 
-  v1.1 - Changed readPassiveTargetID() to handle multiple UID sizes
-  - Added the following helper functions for text display
-  static void PrintHex(const uint8_t * data, const uint32_t numBytes)
-  static void PrintHexChar(const uint8_t * pbtData, const uint32_t numBytes)
-  - Added the following Mifare Classic functions:
-  bool mifareclassic_IsFirstBlock (uint32_t uiBlock)
-  bool mifareclassic_IsTrailerBlock (uint32_t uiBlock)
-  uint8_t mifareclassic_AuthenticateBlock (uint8_t * uid, uint8_t uidLen, uint32_t blockNumber, uint8_t keyNumber, uint8_t * keyData)
-  uint8_t mifareclassic_ReadDataBlock (uint8_t blockNumber, uint8_t * data)
-  uint8_t mifareclassic_WriteDataBlock (uint8_t blockNumber, uint8_t * data)
-  - Added the following Mifare Ultalight functions:
-  uint8_t mifareultralight_ReadPage (uint8_t page, uint8_t * buffer)
+    v1.1 - Changed readPassiveTargetID() to handle multiple UID sizes
+    - Added the following helper functions for text display
+    static void PrintHex(const uint8_t * data, const uint32_t numBytes)
+    static void PrintHexChar(const uint8_t * pbtData, const uint32_t numBytes)
+    - Added the following Mifare Classic functions:
+    bool mifareclassic_IsFirstBlock (uint32_t uiBlock)
+    bool mifareclassic_IsTrailerBlock (uint32_t uiBlock)
+    uint8_t mifareclassic_AuthenticateBlock (uint8_t * uid, uint8_t uidLen, uint32_t blockNumber, uint8_t keyNumber, uint8_t * keyData)
+    uint8_t mifareclassic_ReadDataBlock (uint8_t blockNumber, uint8_t * data)
+    uint8_t mifareclassic_WriteDataBlock (uint8_t blockNumber, uint8_t * data)
+    - Added the following Mifare Ultalight functions:
+    uint8_t mifareultralight_ReadPage (uint8_t page, uint8_t * buffer)
 */
 /**************************************************************************/
 #include "pn532.h"
@@ -61,30 +61,27 @@ uint8_t pn532_packetbuffer[PN532_PACKBUFFSIZ];
 
 /**************************************************************************/
 /*!
-  @brief  Instantiates a new PN532 class using SPI.
+    @brief  Instantiates a new PN532 class using SPI.
 
-  @param  clk       SPI clock pin (SCK)
-  @param  miso      SPI MISO pin
-  @param  mosi      SPI MOSI pin
-  @param  ss        SPI chip select pin (CS/SSEL)
+    @param  clk       SPI clock pin (SCK)
+    @param  miso      SPI MISO pin
+    @param  mosi      SPI MOSI pin
+    @param  ss        SPI chip select pin (CS/SSEL)
 */
 /**************************************************************************/
 PN532::PN532(PinName mosi, PinName miso, PinName sck, PinName ss):
     _usingSPI(1),
     _spi(mosi, miso, sck),
-    _ss(ss)
-{
+    _ss(ss) {
 
 }
-
 
 /**************************************************************************/
 /*!
   @brief  Setups the HW
 */
 /**************************************************************************/
-void PN532::begin()
-{
+void PN532::begin() {
     // not exactly sure why but we have to send a dummy command to get synced up
     pn532_packetbuffer[0] = PN532_COMMAND_GETFIRMWAREVERSION;
     sendCommandCheckAck(pn532_packetbuffer, 1);
@@ -94,68 +91,62 @@ void PN532::begin()
 
 /**************************************************************************/
 /*!
-  @brief  Prints a hexadecimal value in plain characters
+    @brief  Prints a hexadecimal value in plain characters
 
-  @param  data      Pointer to the byte data
-  @param  numBytes  Data length in bytes
+    @param  data      Pointer to the byte data
+    @param  numBytes  Data length in bytes
 */
 /**************************************************************************/
-void PN532::PrintHex(const uint8_t * data, const uint32_t numBytes)
-{
+void PN532::PrintHex(const uint8_t * data, const uint32_t numBytes) {
     uint32_t szPos;
-    for (szPos=0; szPos < numBytes; szPos++)
-        {
-            printf("0x%01x", data[szPos]&0xff);
-            if ((numBytes > 1) && (szPos != numBytes - 1))
-                {
-                    putchar(' ');
-                }
+    for (szPos=0; szPos < numBytes; szPos++) {
+        printf("0x%01x", data[szPos]&0xff);
+        if ((numBytes > 1) && (szPos != numBytes - 1)) {
+            putchar(' ');
         }
+    }
     putchar('\r');
     putchar('\n');
 }
 
 /**************************************************************************/
 /*!
-  @brief  Prints a hexadecimal value in plain characters, along with
-  the char equivalents in the following format
+    @brief  Prints a hexadecimal value in plain characters, along with
+    the char equivalents in the following format
 
-  00 00 00 00 00 00  ......
+    00 00 00 00 00 00  ......
 
-  @param  data      Pointer to the byte data
-  @param  numBytes  Data length in bytes
+    @param  data      Pointer to the byte data
+    @param  numBytes  Data length in bytes
 */
 /**************************************************************************/
-void PN532::PrintHexChar(const uint8_t * data, const uint32_t numBytes)
-{
+void PN532::PrintHexChar(const uint8_t * data, const uint32_t numBytes) {
     uint32_t szPos;
-    for (szPos=0; szPos < numBytes; szPos++)
-        {
-            // Append leading 0 for small values
-            printf("%01x", data[szPos]);
-            if ((numBytes > 1) && (szPos != numBytes - 1))
-                {
-                    putchar(' ');
-                }
-        }
-    putchar(' ');
-    putchar(' ');
-    for (szPos=0; szPos < numBytes; szPos++)
-        {
-            if (data[szPos] <= 0x1F)
+    for (szPos=0; szPos < numBytes; szPos++) {
+        // Append leading 0 for small values
+        printf("%01x", data[szPos]);
+        if ((numBytes > 1) && (szPos != numBytes - 1))
+            {
                 putchar(' ');
-            else
-                putchar((char)data[szPos]);
-        }
+            }
+    }
+    putchar(' ');
+    putchar(' ');
+    for (szPos=0; szPos < numBytes; szPos++) {
+        if (data[szPos] <= 0x1F)
+            putchar(' ');
+        else
+            putchar((char)data[szPos]);
+    }
     putchar('\r');
     putchar('\n');
 }
 
 /**************************************************************************/
 /*!
-  @brief  Checks the firmware version of the PN5xx chip
+    @brief  Checks the firmware version of the PN5xx chip
 
-  @returns  The chip's firmware version and ID
+    @returns  The chip's firmware version and ID
 */
 /**************************************************************************/
 uint32_t PN532::getFirmwareVersion(void) {
@@ -193,14 +184,14 @@ uint32_t PN532::getFirmwareVersion(void) {
 
 /**************************************************************************/
 /*!
-  @brief  Sends a command and waits a specified period for the ACK
-
-  @param  cmd       Pointer to the command buffer
-  @param  cmdlen    The size of the command in bytes
-  @param  timeout   timeout before giving up
-
-  @returns  1 if everything is OK, 0 if timeout occured before an
-  ACK was recieved
+    @brief  Sends a command and waits a specified period for the ACK
+    
+    @param  cmd       Pointer to the command buffer
+    @param  cmdlen    The size of the command in bytes
+    @param  timeout   timeout before giving up
+    
+    @returns  1 if everything is OK, 0 if timeout occured before an
+    ACK was recieved
 */
 /**************************************************************************/
 // default timeout of one second
@@ -240,23 +231,23 @@ bool PN532::sendCommandCheckAck(uint8_t *cmd, uint8_t cmdlen, uint16_t timeout) 
 
 /**************************************************************************/
 /*!
-  Writes an 8-bit value that sets the state of the PN532's GPIO pins
+    Writes an 8-bit value that sets the state of the PN532's GPIO pins
 
-  @warning This function is provided exclusively for board testing and
-  is dangerous since it will throw an error if any pin other
-  than the ones marked "Can be used as GPIO" are modified!  All
-  pins that can not be used as GPIO should ALWAYS be left high
-  (value = 1) or the system will become unstable and a HW reset
-  will be required to recover the PN532.
+    @warning This function is provided exclusively for board testing and
+    is dangerous since it will throw an error if any pin other
+    than the ones marked "Can be used as GPIO" are modified!  All
+    pins that can not be used as GPIO should ALWAYS be left high
+    (value = 1) or the system will become unstable and a HW reset
+    will be required to recover the PN532.
 
-  pinState[0]  = P30     Can be used as GPIO
-  pinState[1]  = P31     Can be used as GPIO
-  pinState[2]  = P32     *** RESERVED (Must be 1!) ***
-  pinState[3]  = P33     Can be used as GPIO
-  pinState[4]  = P34     *** RESERVED (Must be 1!) ***
-  pinState[5]  = P35     Can be used as GPIO
+    pinState[0]  = P30     Can be used as GPIO
+    pinState[1]  = P31     Can be used as GPIO
+    pinState[2]  = P32     *** RESERVED (Must be 1!) ***
+    pinState[3]  = P33     Can be used as GPIO
+    pinState[4]  = P34     *** RESERVED (Must be 1!) ***
+    pinState[5]  = P35     Can be used as GPIO
 
-  @returns 1 if everything executed properly, 0 for an error
+    @returns 1 if everything executed properly, 0 for an error
 */
 /**************************************************************************/
 bool PN532::writeGPIO(uint8_t pinstate) {
@@ -291,16 +282,16 @@ bool PN532::writeGPIO(uint8_t pinstate) {
 
 /**************************************************************************/
 /*!
-  Reads the state of the PN532's GPIO pins
+    Reads the state of the PN532's GPIO pins
 
-  @returns An 8-bit value containing the pin state where:
+    @returns An 8-bit value containing the pin state where:
 
-  pinState[0]  = P30
-  pinState[1]  = P31
-  pinState[2]  = P32
-  pinState[3]  = P33
-  pinState[4]  = P34
-  pinState[5]  = P35
+    pinState[0]  = P30
+    pinState[1]  = P31
+    pinState[2]  = P32
+    pinState[3]  = P33
+    pinState[4]  = P34
+    pinState[5]  = P35
 */
 /**************************************************************************/
 uint8_t PN532::readGPIO(void) {
@@ -373,12 +364,12 @@ bool PN532::SAMConfig(void) {
 
 /**************************************************************************/
 /*!
-  Sets the MxRtyPassiveActivation byte of the RFConfiguration register
-
-  @param  maxRetries    0xFF to wait forever, 0x00..0xFE to timeout
-  after mxRetries
-
-  @returns 1 if everything executed properly, 0 for an error
+    Sets the MxRtyPassiveActivation byte of the RFConfiguration register
+    
+    @param  maxRetries    0xFF to wait forever, 0x00..0xFE to timeout
+    after mxRetries
+    
+    @returns 1 if everything executed properly, 0 for an error
 */
 /**************************************************************************/
 bool PN532::setPassiveActivationRetries(uint8_t maxRetries) {
@@ -402,15 +393,15 @@ bool PN532::setPassiveActivationRetries(uint8_t maxRetries) {
 
 /**************************************************************************/
 /*!
-  Waits for an ISO14443A target to enter the field
+    Waits for an ISO14443A target to enter the field
 
-  @param  cardBaudRate  Baud rate of the card
-  @param  uid           Pointer to the array that will be populated
-  with the card's UID (up to 7 bytes)
-  @param  uidLength     Pointer to the variable that will hold the
-  length of the card's UID.
+    @param  cardBaudRate  Baud rate of the card
+    @param  uid           Pointer to the array that will be populated
+    with the card's UID (up to 7 bytes)
+    @param  uidLength     Pointer to the variable that will hold the
+    length of the card's UID.
 
-  @returns 1 if everything executed properly, 0 for an error
+    @returns 1 if everything executed properly, 0 for an error
 */
 /**************************************************************************/
 bool PN532::readPassiveTargetID(uint8_t cardbaudrate, uint8_t * uid, uint8_t * uidLength, uint16_t timeout) {
@@ -418,13 +409,12 @@ bool PN532::readPassiveTargetID(uint8_t cardbaudrate, uint8_t * uid, uint8_t * u
     pn532_packetbuffer[1] = 1;  // max 1 cards at once (we can set this to 2 later)
     pn532_packetbuffer[2] = cardbaudrate;
 
-    if (!sendCommandCheckAck(pn532_packetbuffer, 3, timeout))
-        {
+    if (!sendCommandCheckAck(pn532_packetbuffer, 3, timeout)) {
 #ifdef PN532DEBUG
-            printf("No card(s) read\r\n");
+        printf("No card(s) read\r\n");
 #endif
-            return 0x0;  // no cards read
-        }
+        return 0x0;  // no cards read
+    }
 
     // wait for a card to enter the field (only possible with I2C)
     if (!_usingSPI) {
@@ -474,13 +464,12 @@ bool PN532::readPassiveTargetID(uint8_t cardbaudrate, uint8_t * uid, uint8_t * u
 #ifdef MIFAREDEBUG
     printf("UID:");
 #endif
-    for (uint8_t i=0; i < pn532_packetbuffer[12]; i++)
-        {
-            uid[i] = pn532_packetbuffer[13+i];
+    for (uint8_t i=0; i < pn532_packetbuffer[12]; i++) {
+        uid[i] = pn532_packetbuffer[13+i];
 #ifdef MIFAREDEBUG
-            printf(" 0x", uid[i]);
+        printf(" 0x", uid[i]);
 #endif
-        }
+    }
 #ifdef MIFAREDEBUG
     printf("\r\n");
 #endif
@@ -490,12 +479,12 @@ bool PN532::readPassiveTargetID(uint8_t cardbaudrate, uint8_t * uid, uint8_t * u
 
 /**************************************************************************/
 /*!
-  @brief  Exchanges an APDU with the currently inlisted peer
+    @brief  Exchanges an APDU with the currently inlisted peer
 
-  @param  send            Pointer to data to send
-  @param  sendLength      Length of the data to send
-  @param  response        Pointer to response data
-  @param  responseLength  Pointer to the response data length
+    @param  send            Pointer to data to send
+    @param  sendLength      Length of the data to send
+    @param  response        Pointer to response data
+    @param  responseLength  Pointer to the response data length
 */
 /**************************************************************************/
 bool PN532::inDataExchange(uint8_t * send, uint8_t sendLength, uint8_t * response, uint8_t * responseLength) {
@@ -635,17 +624,15 @@ bool PN532::inListPassiveTarget() {
     return true;
 }
 
-
 /***** Mifare Classic Functions ******/
 
 /**************************************************************************/
 /*!
-  Indicates whether the specified block number is the first block
-  in the sector (block 0 relative to the current sector)
+     Indicates whether the specified block number is the first block
+     in the sector (block 0 relative to the current sector)
 */
 /**************************************************************************/
-bool PN532::mifareclassic_IsFirstBlock (uint32_t uiBlock)
-{
+bool PN532::mifareclassic_IsFirstBlock (uint32_t uiBlock) {
     // Test if we are in the small or big sectors
     if (uiBlock < 128)
         return ((uiBlock) % 4 == 0);
@@ -658,8 +645,7 @@ bool PN532::mifareclassic_IsFirstBlock (uint32_t uiBlock)
   Indicates whether the specified block number is the sector trailer
 */
 /**************************************************************************/
-bool PN532::mifareclassic_IsTrailerBlock (uint32_t uiBlock)
-{
+bool PN532::mifareclassic_IsTrailerBlock (uint32_t uiBlock) {
     // Test if we are in the small or big sectors
     if (uiBlock < 128)
         return ((uiBlock + 1) % 4 == 0);
@@ -669,25 +655,24 @@ bool PN532::mifareclassic_IsTrailerBlock (uint32_t uiBlock)
 
 /**************************************************************************/
 /*!
-  Tries to authenticate a block of memory on a MIFARE card using the
-  INDATAEXCHANGE command.  See section 7.3.8 of the PN532 User Manual
-  for more information on sending MIFARE and other commands.
+    Tries to authenticate a block of memory on a MIFARE card using the
+    INDATAEXCHANGE command.  See section 7.3.8 of the PN532 User Manual
+    for more information on sending MIFARE and other commands.
 
-  @param  uid           Pointer to a byte array containing the card UID
-  @param  uidLen        The length (in bytes) of the card's UID (Should
-  be 4 for MIFARE Classic)
-  @param  blockNumber   The block number to authenticate.  (0..63 for
-  1KB cards, and 0..255 for 4KB cards).
-  @param  keyNumber     Which key type to use during authentication
-  (0 = MIFARE_CMD_AUTH_A, 1 = MIFARE_CMD_AUTH_B)
-  @param  keyData       Pointer to a byte array containing the 6 byte
-  key value
+    @param  uid           Pointer to a byte array containing the card UID
+    @param  uidLen        The length (in bytes) of the card's UID (Should
+    be 4 for MIFARE Classic)
+    @param  blockNumber   The block number to authenticate.  (0..63 for
+    1KB cards, and 0..255 for 4KB cards).
+    @param  keyNumber     Which key type to use during authentication
+    (0 = MIFARE_CMD_AUTH_A, 1 = MIFARE_CMD_AUTH_B)
+    @param  keyData       Pointer to a byte array containing the 6 byte
+    key value
 
-  @returns 1 if everything executed properly, 0 for an error
+    @returns 1 if everything executed properly, 0 for an error
 */
 /**************************************************************************/
-uint8_t PN532::mifareclassic_AuthenticateBlock (uint8_t * uid, uint8_t uidLen, uint32_t blockNumber, uint8_t keyNumber, uint8_t * keyData)
-{
+uint8_t PN532::mifareclassic_AuthenticateBlock (uint8_t * uid, uint8_t uidLen, uint32_t blockNumber, uint8_t keyNumber, uint8_t * keyData) {
     uint8_t i;
 
     // Hang on to the key and uid data
@@ -722,33 +707,31 @@ uint8_t PN532::mifareclassic_AuthenticateBlock (uint8_t * uid, uint8_t uidLen, u
     // check if the response is valid and we are authenticated???
     // for an auth success it should be bytes 5-7: 0xD5 0x41 0x00
     // Mifare auth error is technically byte 7: 0x14 but anything other and 0x00 is not good
-    if (pn532_packetbuffer[7] != 0x00)
-        {
+    if (pn532_packetbuffer[7] != 0x00) {
 #ifdef PN532DEBUG
-            printf("Authentification failed: ");
-            PN532::PrintHexChar(pn532_packetbuffer, 12);
+        printf("Authentification failed: ");
+        PN532::PrintHexChar(pn532_packetbuffer, 12);
 #endif
-            return 0;
-        }
+        return 0;
+    }
 
     return 1;
 }
 
 /**************************************************************************/
 /*!
-  Tries to read an entire 16-byte data block at the specified block
-  address.
+    Tries to read an entire 16-byte data block at the specified block
+    address.
 
-  @param  blockNumber   The block number to authenticate.  (0..63 for
-  1KB cards, and 0..255 for 4KB cards).
-  @param  data          Pointer to the byte array that will hold the
-  retrieved data (if any)
+    @param  blockNumber   The block number to authenticate.  (0..63 for
+    1KB cards, and 0..255 for 4KB cards).
+    @param  data          Pointer to the byte array that will hold the
+    retrieved data (if any)
 
-  @returns 1 if everything executed properly, 0 for an error
+    @returns 1 if everything executed properly, 0 for an error
 */
 /**************************************************************************/
-uint8_t PN532::mifareclassic_ReadDataBlock (uint8_t blockNumber, uint8_t * data)
-{
+uint8_t PN532::mifareclassic_ReadDataBlock (uint8_t blockNumber, uint8_t * data) {
 #ifdef MIFAREDEBUG
     printf("Trying to read 16 bytes from block %d\r\n", blockNumber);
 #endif
@@ -760,26 +743,24 @@ uint8_t PN532::mifareclassic_ReadDataBlock (uint8_t blockNumber, uint8_t * data)
     pn532_packetbuffer[3] = blockNumber;            /* Block Number (0..63 for 1K, 0..255 for 4K) */
 
     /* Send the command */
-    if (! sendCommandCheckAck(pn532_packetbuffer, 4))
-        {
+    if (! sendCommandCheckAck(pn532_packetbuffer, 4)) {
 #ifdef MIFAREDEBUG
-            printf("Failed to receive ACK for read command\r\n");
+        printf("Failed to receive ACK for read command\r\n");
 #endif
-            return 0;
-        }
+        return 0;
+    }
 
     /* Read the response packet */
     readdata(pn532_packetbuffer, 26);
 
     /* If byte 8 isn't 0x00 we probably have an error */
-    if (pn532_packetbuffer[7] != 0x00)
-        {
+    if (pn532_packetbuffer[7] != 0x00) {
 #ifdef MIFAREDEBUG
-            printf("Unexpected response\r\n");
-            PN532::PrintHexChar(pn532_packetbuffer, 26);
+        printf("Unexpected response\r\n");
+        PN532::PrintHexChar(pn532_packetbuffer, 26);
 #endif
-            return 0;
-        }
+        return 0;
+    }
 
     /* Copy the 16 data bytes to the output buffer        */
     /* Block content starts at byte 9 of a valid response */
@@ -796,18 +777,17 @@ uint8_t PN532::mifareclassic_ReadDataBlock (uint8_t blockNumber, uint8_t * data)
 
 /**************************************************************************/
 /*!
-  Tries to write an entire 16-byte data block at the specified block
-  address.
+    Tries to write an entire 16-byte data block at the specified block
+    address.
 
-  @param  blockNumber   The block number to authenticate.  (0..63 for
-  1KB cards, and 0..255 for 4KB cards).
-  @param  data          The byte array that contains the data to write.
+    @param  blockNumber   The block number to authenticate.  (0..63 for
+    1KB cards, and 0..255 for 4KB cards).
+    @param  data          The byte array that contains the data to write.
 
-  @returns 1 if everything executed properly, 0 for an error
+    @returns 1 if everything executed properly, 0 for an error
 */
 /**************************************************************************/
-uint8_t PN532::mifareclassic_WriteDataBlock (uint8_t blockNumber, uint8_t * data)
-{
+uint8_t PN532::mifareclassic_WriteDataBlock (uint8_t blockNumber, uint8_t * data) {
 #ifdef MIFAREDEBUG
     printf("Trying to write 16 bytes to block %d\r\n", blockNumber);
 #endif
@@ -820,13 +800,12 @@ uint8_t PN532::mifareclassic_WriteDataBlock (uint8_t blockNumber, uint8_t * data
     memcpy (pn532_packetbuffer+4, data, 16);          /* Data Payload */
 
     /* Send the command */
-    if (! sendCommandCheckAck(pn532_packetbuffer, 20))
-        {
+    if (! sendCommandCheckAck(pn532_packetbuffer, 20)) {
 #ifdef MIFAREDEBUG
-            printf("Failed to receive ACK for write command\r\n");
+        printf("Failed to receive ACK for write command\r\n");
 #endif
-            return 0;
-        }
+        return 0;
+    }
     ThisThread::sleep_for(10);
 
     /* Read the response packet */
@@ -837,13 +816,12 @@ uint8_t PN532::mifareclassic_WriteDataBlock (uint8_t blockNumber, uint8_t * data
 
 /**************************************************************************/
 /*!
-  Formats a Mifare Classic card to store NDEF Records
+    Formats a Mifare Classic card to store NDEF Records
 
-  @returns 1 if everything executed properly, 0 for an error
+    @returns 1 if everything executed properly, 0 for an error
 */
 /**************************************************************************/
-uint8_t PN532::mifareclassic_FormatNDEF (void)
-{
+uint8_t PN532::mifareclassic_FormatNDEF (void) {
     uint8_t sectorbuffer1[16] = {0x14, 0x01, 0x03, 0xE1, 0x03, 0xE1, 0x03, 0xE1, 0x03, 0xE1, 0x03, 0xE1, 0x03, 0xE1, 0x03, 0xE1};
     uint8_t sectorbuffer2[16] = {0x03, 0xE1, 0x03, 0xE1, 0x03, 0xE1, 0x03, 0xE1, 0x03, 0xE1, 0x03, 0xE1, 0x03, 0xE1, 0x03, 0xE1};
     uint8_t sectorbuffer3[16] = {0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0x78, 0x77, 0x88, 0xC1, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
@@ -866,24 +844,23 @@ uint8_t PN532::mifareclassic_FormatNDEF (void)
 
 /**************************************************************************/
 /*!
-  Writes an NDEF URI Record to the specified sector (1..15)
+    Writes an NDEF URI Record to the specified sector (1..15)
 
-  Note that this function assumes that the Mifare Classic card is
-  already formatted to work as an "NFC Forum Tag" and uses a MAD1
-  file system.  You can use the NXP TagWriter app on Android to
-  properly format cards for this.
+    Note that this function assumes that the Mifare Classic card is
+    already formatted to work as an "NFC Forum Tag" and uses a MAD1
+    file system.  You can use the NXP TagWriter app on Android to
+    properly format cards for this.
 
-  @param  sectorNumber  The sector that the URI record should be written
-  to (can be 1..15 for a 1K card)
-  @param  uriIdentifier The uri identifier code (0 = none, 0x01 =
-  "http://www.", etc.)
-  @param  url           The uri text to write (max 38 characters).
+    @param  sectorNumber  The sector that the URI record should be written
+    to (can be 1..15 for a 1K card)
+    @param  uriIdentifier The uri identifier code (0 = none, 0x01 =
+    "http://www.", etc.)
+    @param  url           The uri text to write (max 38 characters).
 
-  @returns 1 if everything executed properly, 0 for an error
+    @returns 1 if everything executed properly, 0 for an error
 */
 /**************************************************************************/
-uint8_t PN532::mifareclassic_WriteNDEFURI (uint8_t sectorNumber, uint8_t uriIdentifier, const char * url)
-{
+uint8_t PN532::mifareclassic_WriteNDEFURI (uint8_t sectorNumber, uint8_t uriIdentifier, const char * url) {
     // Figure out how long the string is
     uint8_t len = strlen(url);
 
@@ -903,40 +880,35 @@ uint8_t PN532::mifareclassic_WriteNDEFURI (uint8_t sectorNumber, uint8_t uriIden
     uint8_t sectorbuffer2[16] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     uint8_t sectorbuffer3[16] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     uint8_t sectorbuffer4[16] = {0xD3, 0xF7, 0xD3, 0xF7, 0xD3, 0xF7, 0x7F, 0x07, 0x88, 0x40, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-    if (len <= 6)
-        {
-            // Unlikely we'll get a url this short, but why not ...
-            memcpy (sectorbuffer1+9, url, len);
-            sectorbuffer1[len+9] = 0xFE;
-        }
-    else if (len == 7)
-        {
-            // 0xFE needs to be wrapped around to next block
-            memcpy (sectorbuffer1+9, url, len);
-            sectorbuffer2[0] = 0xFE;
-        }
-    else if ((len > 7) && (len <= 22))
-        {
-            // Url fits in two blocks
-            memcpy (sectorbuffer1+9, url, 7);
-            memcpy (sectorbuffer2, url+7, len-7);
-            sectorbuffer2[len-7] = 0xFE;
-        }
-    else if (len == 23)
-        {
-            // 0xFE needs to be wrapped around to final block
-            memcpy (sectorbuffer1+9, url, 7);
-            memcpy (sectorbuffer2, url+7, len-7);
-            sectorbuffer3[0] = 0xFE;
-        }
-    else
-        {
-            // Url fits in three blocks
-            memcpy (sectorbuffer1+9, url, 7);
-            memcpy (sectorbuffer2, url+7, 16);
-            memcpy (sectorbuffer3, url+23, len-24);
-            sectorbuffer3[len-22] = 0xFE;
-        }
+    if (len <= 6) {
+        // Unlikely we'll get a url this short, but why not ...
+        memcpy (sectorbuffer1+9, url, len);
+        sectorbuffer1[len+9] = 0xFE;
+    }
+    else if (len == 7) {
+        // 0xFE needs to be wrapped around to next block
+        memcpy (sectorbuffer1+9, url, len);
+        sectorbuffer2[0] = 0xFE;
+    }
+    else if ((len > 7) && (len <= 22)) {
+        // Url fits in two blocks
+        memcpy (sectorbuffer1+9, url, 7);
+        memcpy (sectorbuffer2, url+7, len-7);
+        sectorbuffer2[len-7] = 0xFE;
+    }
+    else if (len == 23) {
+        // 0xFE needs to be wrapped around to final block
+        memcpy (sectorbuffer1+9, url, 7);
+        memcpy (sectorbuffer2, url+7, len-7);
+        sectorbuffer3[0] = 0xFE;
+    }
+    else {
+        // Url fits in three blocks
+        memcpy (sectorbuffer1+9, url, 7);
+        memcpy (sectorbuffer2, url+7, 16);
+        memcpy (sectorbuffer3, url+23, len-24);
+        sectorbuffer3[len-22] = 0xFE;
+    }
 
     // Now write all three blocks back to the card
     if (!(mifareclassic_WriteDataBlock (sectorNumber*4, sectorbuffer1)))
@@ -956,22 +928,20 @@ uint8_t PN532::mifareclassic_WriteNDEFURI (uint8_t sectorNumber, uint8_t uriIden
 
 /**************************************************************************/
 /*!
-  Tries to read an entire 4-byte page at the specified address.
+    Tries to read an entire 4-byte page at the specified address.
 
-  @param  page        The page number (0..63 in most cases)
-  @param  buffer      Pointer to the byte array that will hold the
-  retrieved data (if any)
+    @param  page        The page number (0..63 in most cases)
+    @param  buffer      Pointer to the byte array that will hold the
+    retrieved data (if any)
 */
 /**************************************************************************/
-uint8_t PN532::mifareultralight_ReadPage (uint8_t page, uint8_t * buffer)
-{
-    if (page >= 64)
-        {
+uint8_t PN532::mifareultralight_ReadPage (uint8_t page, uint8_t * buffer) {
+    if (page >= 64) {
 #ifdef MIFAREDEBUG
-            printf("Page value out of range\r\n");
+        printf("Page value out of range\r\n");
 #endif
-            return 0;
-        }
+        return 0;
+    }
 
 #ifdef MIFAREDEBUG
     printf("Reading page %d", page);
@@ -984,13 +954,12 @@ uint8_t PN532::mifareultralight_ReadPage (uint8_t page, uint8_t * buffer)
     pn532_packetbuffer[3] = page;                /* Page Number (0..63 in most cases) */
 
     /* Send the command */
-    if (! sendCommandCheckAck(pn532_packetbuffer, 4))
-        {
+    if (! sendCommandCheckAck(pn532_packetbuffer, 4)) {
 #ifdef MIFAREDEBUG
-            printf("Failed to receive ACK for write command\r\n");
+        printf("Failed to receive ACK for write command\r\n");
 #endif
-            return 0;
-        }
+        return 0;
+    }
 
     /* Read the response packet */
     readdata(pn532_packetbuffer, 26);
@@ -1000,23 +969,21 @@ uint8_t PN532::mifareultralight_ReadPage (uint8_t page, uint8_t * buffer)
 #endif
 
     /* If byte 8 isn't 0x00 we probably have an error */
-    if (pn532_packetbuffer[7] == 0x00)
-        {
-            /* Copy the 4 data bytes to the output buffer         */
-            /* Block content starts at byte 9 of a valid response */
-            /* Note that the command actually reads 16 byte or 4  */
-            /* pages at a time ... we simply discard the last 12  */
-            /* bytes                                              */
-            memcpy (buffer, pn532_packetbuffer+8, 4);
-        }
-    else
-        {
+    if (pn532_packetbuffer[7] == 0x00) {
+        /* Copy the 4 data bytes to the output buffer         */
+        /* Block content starts at byte 9 of a valid response */
+        /* Note that the command actually reads 16 byte or 4  */
+        /* pages at a time ... we simply discard the last 12  */
+        /* bytes                                              */
+        memcpy (buffer, pn532_packetbuffer+8, 4);
+    }
+    else {
 #ifdef MIFAREDEBUG
-            printf("Unexpected response reading block: \r\n");
-            PN532::PrintHexChar(pn532_packetbuffer, 26);
+        printf("Unexpected response reading block: \r\n");
+        PN532::PrintHexChar(pn532_packetbuffer, 26);
 #endif
-            return 0;
-        }
+        return 0;
+    }
 
     /* Display data for debug if requested */
 #ifdef MIFAREDEBUG
@@ -1030,27 +997,24 @@ uint8_t PN532::mifareultralight_ReadPage (uint8_t page, uint8_t * buffer)
 
 /**************************************************************************/
 /*!
-  Tries to write an entire 4-byte page at the specified block
-  address.
+    Tries to write an entire 4-byte page at the specified block
+    address.
 
-  @param  page          The page number to write.  (0..63 for most cases)
-  @param  data          The byte array that contains the data to write.
-  Should be exactly 4 bytes long.
+    @param  page          The page number to write.  (0..63 for most cases)
+    @param  data          The byte array that contains the data to write.
+    Should be exactly 4 bytes long.
 
-  @returns 1 if everything executed properly, 0 for an error
+    @returns 1 if everything executed properly, 0 for an error
 */
 /**************************************************************************/
-uint8_t PN532::mifareultralight_WritePage (uint8_t page, uint8_t * data)
-{
-
-    if (page >= 64)
-        {
+uint8_t PN532::mifareultralight_WritePage (uint8_t page, uint8_t * data) {
+    if (page >= 64) {
 #ifdef MIFAREDEBUG
-            printf("Page value out of range\r\n");
+        printf("Page value out of range\r\n");
 #endif
-            // Return Failed Signal
-            return 0;
-        }
+        // Return Failed Signal
+        return 0;
+    }
 
 #ifdef MIFAREDEBUG
     printf("Trying to write 4 byte page %d\r\n", page);
@@ -1064,15 +1028,14 @@ uint8_t PN532::mifareultralight_WritePage (uint8_t page, uint8_t * data)
     memcpy (pn532_packetbuffer+4, data, 4);          /* Data Payload */
 
     /* Send the command */
-    if (! sendCommandCheckAck(pn532_packetbuffer, 8))
-        {
+    if (! sendCommandCheckAck(pn532_packetbuffer, 8)) {
 #ifdef MIFAREDEBUG
-            printf("Failed to receive ACK for write command\r\n");
+        printf("Failed to receive ACK for write command\r\n");
 #endif
 
-            // Return Failed Signal
-            return 0;
-        }
+        // Return Failed Signal
+        return 0;
+    }
     ThisThread::sleep_for(10);
 
     /* Read the response packet */
@@ -1087,15 +1050,14 @@ uint8_t PN532::mifareultralight_WritePage (uint8_t page, uint8_t * data)
 
 /**************************************************************************/
 /*!
-  Tries to read an entire 4-byte page at the specified address.
+    Tries to read an entire 4-byte page at the specified address.
 
-  @param  page        The page number (0..63 in most cases)
-  @param  buffer      Pointer to the byte array that will hold the
-  retrieved data (if any)
+    @param  page        The page number (0..63 in most cases)
+    @param  buffer      Pointer to the byte array that will hold the
+    retrieved data (if any)
 */
 /**************************************************************************/
-uint8_t PN532::ntag2xx_ReadPage (uint8_t page, uint8_t * buffer)
-{
+uint8_t PN532::ntag2xx_ReadPage (uint8_t page, uint8_t * buffer) {
     // TAG Type       PAGES   USER START    USER STOP
     // --------       -----   ----------    ---------
     // NTAG 203       42      4             39
@@ -1103,13 +1065,12 @@ uint8_t PN532::ntag2xx_ReadPage (uint8_t page, uint8_t * buffer)
     // NTAG 215       135     4             129
     // NTAG 216       231     4             225
 
-    if (page >= 231)
-        {
+    if (page >= 231) {
 #ifdef MIFAREDEBUG
-            printf("Page value out of range\r\n");
+        printf("Page value out of range\r\n");
 #endif
-            return 0;
-        }
+        return 0;
+    }
 
 #ifdef MIFAREDEBUG
     printf("Reading page %d\r\n", page);
@@ -1122,13 +1083,12 @@ uint8_t PN532::ntag2xx_ReadPage (uint8_t page, uint8_t * buffer)
     pn532_packetbuffer[3] = page;                /* Page Number (0..63 in most cases) */
 
     /* Send the command */
-    if (! sendCommandCheckAck(pn532_packetbuffer, 4))
-        {
+    if (! sendCommandCheckAck(pn532_packetbuffer, 4)) {
 #ifdef MIFAREDEBUG
-            printf("Failed to receive ACK for write command\r\n");
+        printf("Failed to receive ACK for write command\r\n");
 #endif
-            return 0;
-        }
+        return 0;
+    }
 
     /* Read the response packet */
     readdata(pn532_packetbuffer, 26);
@@ -1138,23 +1098,21 @@ uint8_t PN532::ntag2xx_ReadPage (uint8_t page, uint8_t * buffer)
 #endif
 
     /* If byte 8 isn't 0x00 we probably have an error */
-    if (pn532_packetbuffer[7] == 0x00)
-        {
-            /* Copy the 4 data bytes to the output buffer         */
-            /* Block content starts at byte 9 of a valid response */
-            /* Note that the command actually reads 16 byte or 4  */
-            /* pages at a time ... we simply discard the last 12  */
-            /* bytes                                              */
-            memcpy(buffer, pn532_packetbuffer+8, 4);
-        }
-    else
-        {
+    if (pn532_packetbuffer[7] == 0x00) {
+        /* Copy the 4 data bytes to the output buffer         */
+        /* Block content starts at byte 9 of a valid response */
+        /* Note that the command actually reads 16 byte or 4  */
+        /* pages at a time ... we simply discard the last 12  */
+        /* bytes                                              */
+        memcpy(buffer, pn532_packetbuffer+8, 4);
+    }
+    else {
 #ifdef MIFAREDEBUG
-            printf("Unexpected response reading block: \r\n");
-            PN532::PrintHexChar(pn532_packetbuffer, 26);
+        printf("Unexpected response reading block: \r\n");
+        PN532::PrintHexChar(pn532_packetbuffer, 26);
 #endif
-            return 0;
-        }
+        return 0;
+    }
 
     /* Display data for debug if requested */
 #ifdef MIFAREDEBUG
@@ -1168,18 +1126,17 @@ uint8_t PN532::ntag2xx_ReadPage (uint8_t page, uint8_t * buffer)
 
 /**************************************************************************/
 /*!
-  Tries to write an entire 4-byte page at the specified block
-  address.
+    Tries to write an entire 4-byte page at the specified block
+    address.
 
-  @param  page          The page number to write.  (0..63 for most cases)
-  @param  data          The byte array that contains the data to write.
-  Should be exactly 4 bytes long.
+    @param  page          The page number to write.  (0..63 for most cases)
+    @param  data          The byte array that contains the data to write.
+    Should be exactly 4 bytes long.
 
-  @returns 1 if everything executed properly, 0 for an error
+    @returns 1 if everything executed properly, 0 for an error
 */
 /**************************************************************************/
-uint8_t PN532::ntag2xx_WritePage (uint8_t page, uint8_t * data)
-{
+uint8_t PN532::ntag2xx_WritePage (uint8_t page, uint8_t * data) {
     // TAG Type       PAGES   USER START    USER STOP
     // --------       -----   ----------    ---------
     // NTAG 203       42      4             39
@@ -1187,14 +1144,13 @@ uint8_t PN532::ntag2xx_WritePage (uint8_t page, uint8_t * data)
     // NTAG 215       135     4             129
     // NTAG 216       231     4             225
 
-    if ((page < 4) || (page > 225))
-        {
+    if ((page < 4) || (page > 225)) {
 #ifdef MIFAREDEBUG
-            printf("Page value out of range\r\n");
+        printf("Page value out of range\r\n");
 #endif
-            // Return Failed Signal
-            return 0;
-        }
+        // Return Failed Signal
+        return 0;
+    }
 
 #ifdef MIFAREDEBUG
     printf("Trying to write 4 byte page %d\r\n%x\r\n", page, page);
@@ -1208,15 +1164,14 @@ uint8_t PN532::ntag2xx_WritePage (uint8_t page, uint8_t * data)
     memcpy (pn532_packetbuffer+4, data, 4);                 /* Data Payload */
 
     /* Send the command */
-    if (! sendCommandCheckAck(pn532_packetbuffer, 8))
-        {
+    if (! sendCommandCheckAck(pn532_packetbuffer, 8)) {
 #ifdef MIFAREDEBUG
-            printf("Failed to receive ACK for write command\r\n");
+        printf("Failed to receive ACK for write command\r\n");
 #endif
 
-            // Return Failed Signal
-            return 0;
-        }
+        // Return Failed Signal
+        return 0;
+    }
     ThisThread::sleep_for(10);
 
     /* Read the response packet */
@@ -1228,21 +1183,20 @@ uint8_t PN532::ntag2xx_WritePage (uint8_t page, uint8_t * data)
 
 /**************************************************************************/
 /*!
-  Writes an NDEF URI Record starting at the specified page (4..nn)
+    Writes an NDEF URI Record starting at the specified page (4..nn)
 
-  Note that this function assumes that the NTAG2xx card is
-  already formatted to work as an "NFC Forum Tag".
+    Note that this function assumes that the NTAG2xx card is
+    already formatted to work as an "NFC Forum Tag".
 
-  @param  uriIdentifier The uri identifier code (0 = none, 0x01 =
-  "http://www.", etc.)
-  @param  url           The uri text to write (null-terminated string).
-  @param  dataLen       The size of the data area for overflow checks.
+    @param  uriIdentifier The uri identifier code (0 = none, 0x01 =
+    "http://www.", etc.)
+    @param  url           The uri text to write (null-terminated string).
+    @param  dataLen       The size of the data area for overflow checks.
 
-  @returns 1 if everything executed properly, 0 for an error
+    @returns 1 if everything executed properly, 0 for an error
 */
 /**************************************************************************/
-uint8_t PN532::ntag2xx_WriteNDEFURI (uint8_t uriIdentifier, char * url, uint8_t dataLen)
-{
+uint8_t PN532::ntag2xx_WriteNDEFURI (uint8_t uriIdentifier, char * url, uint8_t dataLen) {
     uint8_t pageBuffer[4] = { 0, 0, 0, 0 };
 
     // Remove NDEF record overhead from the URI data (pageHeader below)
@@ -1289,42 +1243,38 @@ uint8_t PN532::ntag2xx_WriteNDEFURI (uint8_t uriIdentifier, char * url, uint8_t 
     // Write URI (starting at page 7)
     uint8_t currentPage = 7;
     char * urlcopy = url;
-    while(len)
-        {
-            if (len < 4)
-                {
-                    memset(pageBuffer, 0, 4);
-                    memcpy(pageBuffer, urlcopy, len);
-                    pageBuffer[len] = 0xFE; // NDEF record footer
-                    if (!(ntag2xx_WritePage (currentPage, pageBuffer)))
-                        return 0;
-                    // DONE!
-                    return 1;
-                }
-            else if (len == 4)
-                {
-                    memcpy(pageBuffer, urlcopy, len);
-                    if (!(ntag2xx_WritePage (currentPage, pageBuffer)))
-                        return 0;
-                    memset(pageBuffer, 0, 4);
-                    pageBuffer[0] = 0xFE; // NDEF record footer
-                    currentPage++;
-                    if (!(ntag2xx_WritePage (currentPage, pageBuffer)))
-                        return 0;
-                    // DONE!
-                    return 1;
-                }
-            else
-                {
-                    // More than one page of data left
-                    memcpy(pageBuffer, urlcopy, 4);
-                    if (!(ntag2xx_WritePage (currentPage, pageBuffer)))
-                        return 0;
-                    currentPage++;
-                    urlcopy+=4;
-                    len-=4;
-                }
+    while(len) {
+        if (len < 4) {
+            memset(pageBuffer, 0, 4);
+            memcpy(pageBuffer, urlcopy, len);
+            pageBuffer[len] = 0xFE; // NDEF record footer
+            if (!(ntag2xx_WritePage (currentPage, pageBuffer)))
+                return 0;
+            // DONE!
+            return 1;
         }
+        else if (len == 4) {
+            memcpy(pageBuffer, urlcopy, len);
+            if (!(ntag2xx_WritePage (currentPage, pageBuffer)))
+                return 0;
+            memset(pageBuffer, 0, 4);
+            pageBuffer[0] = 0xFE; // NDEF record footer
+            currentPage++;
+            if (!(ntag2xx_WritePage (currentPage, pageBuffer)))
+                return 0;
+            // DONE!
+            return 1;
+        }
+        else {
+            // More than one page of data left
+            memcpy(pageBuffer, urlcopy, 4);
+            if (!(ntag2xx_WritePage (currentPage, pageBuffer)))
+                return 0;
+            currentPage++;
+            urlcopy+=4;
+            len-=4;
+        }
+    }
 
     // Seems that everything was OK (?!)
     return 1;
@@ -1336,7 +1286,7 @@ uint8_t PN532::ntag2xx_WriteNDEFURI (uint8_t uriIdentifier, char * url, uint8_t 
 
 /**************************************************************************/
 /*!
-  @brief  Tries to read the SPI or I2C ACK signal
+    @brief  Tries to read the SPI or I2C ACK signal
 */
 /**************************************************************************/
 bool PN532::readack() {
@@ -1350,7 +1300,7 @@ bool PN532::readack() {
 
 /**************************************************************************/
 /*!
-  @brief  Return true if the PN532 is ready with a response.
+    @brief  Return true if the PN532 is ready with a response.
 */
 /**************************************************************************/
 bool PN532::isready() {
@@ -1369,9 +1319,9 @@ bool PN532::isready() {
 
 /**************************************************************************/
 /*!
-  @brief  Waits until the PN532 is ready.
+    @brief  Waits until the PN532 is ready.
 
-  @param  timeout   Timeout before giving up
+    @param  timeout   Timeout before giving up
 */
 /**************************************************************************/
 bool PN532::waitready(uint16_t timeout) {
@@ -1391,10 +1341,10 @@ bool PN532::waitready(uint16_t timeout) {
 
 /**************************************************************************/
 /*!
-  @brief  Reads n bytes of data from the PN532 via SPI or I2C.
+    @brief  Reads n bytes of data from the PN532 via SPI or I2C.
 
-  @param  buff      Pointer to the buffer where data will be written
-  @param  n         Number of bytes to be read
+    @param  buff      Pointer to the buffer where data will be written
+    @param  n         Number of bytes to be read
 */
 /**************************************************************************/
 void PN532::readdata(uint8_t* buff, uint8_t n) {
@@ -1422,11 +1372,11 @@ void PN532::readdata(uint8_t* buff, uint8_t n) {
 
 /**************************************************************************/
 /*!
-  @brief  Writes a command to the PN532, automatically inserting the
-  preamble and required frame details (checksum, len, etc.)
+    @brief  Writes a command to the PN532, automatically inserting the
+    preamble and required frame details (checksum, len, etc.)
 
-  @param  cmd       Pointer to the command buffer
-  @param  cmdlen    Command length in bytes
+    @param  cmd       Pointer to the command buffer
+    @param  cmdlen    Command length in bytes
 */
 /**************************************************************************/
 void PN532::writecommand(uint8_t* cmd, uint8_t cmdlen) {
@@ -1492,4 +1442,3 @@ uint8_t PN532::spi_read() {
     uint8_t reversed = _spi.write(0x0);
     return __RBIT(reversed) >> 24;
 }
-
