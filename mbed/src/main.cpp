@@ -113,7 +113,13 @@ void loop() {
     if(firstCard){
         for(int i = 0; i < 6; i++){
             password[i] = data[i];
+            helper.led->green();
+            ThisThread::sleep_for(50ms);
+            helper.led->clear();
+            ThisThread::sleep_for(50ms);
+            
         }
+        
         printf("Saved new card\r\n");
         firstCard = false;
         ThisThread::sleep_for (200ms);
