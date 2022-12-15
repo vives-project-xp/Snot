@@ -57,6 +57,9 @@ namespace Helpers{
 
   void Helper::closeCap() {
     cap->write(0.5);
+    led->red();
+    ThisThread::sleep_for(100ms);
+    led->clear();
   }
 
   void Helper::openCap(){
@@ -200,6 +203,7 @@ namespace Helpers{
     led->green();
     ThisThread::sleep_for(1000ms);
     led->clear();
+    ThisThread::sleep_for(1000ms);
   }
 
   void Helper::blinkLedBad(){
@@ -214,16 +218,14 @@ namespace Helpers{
 
   void Helper::goodCard(void){
     openCap();
-    // ledThread.start(callback(Helper::blinkLedGood, this));
     printf("good card\r\n");
     blinkLedGood();
-    // ThisThread::sleep_for(1100ms); // Need check comfortable wait time
-    // ledThread.join();
     closeCap();
   }
 
   void Helper::badCard(void){
     closeCap();
+    printf("Wrong card\r\n");
     blinkLedBad();
   }
 }
