@@ -69,6 +69,16 @@ void loop() {
     cardid <<= 8;
     cardid |= uid[3];
 
+    // To set cards uncoment single line of your choice and return.
+    // If the card is set you will see prompt in terminal
+    // after this it will fail because keyA will be changed
+    
+    // helper.setMaster(uid, uidLength);
+    // helper.setGood(uid, uidLength);
+    // helper.setBad(uid, uidLength);
+    // return;
+
+
 
     // Authenticate with default keyA set by me :)
     success = m_rfid.mifareclassic_AuthenticateBlock(uid, uidLength, 8, 0, keyA);
