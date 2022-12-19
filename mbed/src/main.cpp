@@ -8,12 +8,12 @@
 PN532 m_rfid(D11, D12, D13, D10);
 Servo m_cap(D9);
 
-PwmOut red(PA_1);
+// change it to be inside Led object
+PwmOut red(PA_1); 
 PwmOut green(PB_0);
 PwmOut blue(D6);  // should be PB_3
 
 Helpers::Led led(&red, &green, &blue);
-
 Helpers::Helper helper(&m_rfid, &m_cap, &led);
 
 bool firstCard = true;
