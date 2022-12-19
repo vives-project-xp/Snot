@@ -1,9 +1,15 @@
 #include "helpers.h"
 
 namespace Helpers {
-    Helper::Helper(PN532 *rfid, Servo *cap, Led *led): rfid(rfid), cap(cap), led(led) {
+    Helper::Helper(PN532 *rfid, Servo *cap): rfid(rfid), cap(cap), breach(D7){
 
-    }
+    };
+
+    Helper::Helper(PN532 *rfid, Servo *cap, Led *led): rfid(rfid), cap(cap), led(led), breach(D7) {
+
+        breachThread.start(callback(Helper::breachFun, this));
+        
+    };
 
     // Error log
     void Helper::defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid) {
@@ -211,15 +217,49 @@ namespace Helpers {
     }
 
     void Helper::goodCard(void) {
+    	NFCUsed = true; // later chahge to events
       openCap();
       printf("good card\r\n");
       blinkLedGood();
       closeCap();
+      NFCUsed = false;
     }
 
     void Helper::badCard(void) {
+			NFCUsed = false;
       closeCap();
       printf("Wrong card\r\n");
       blinkLedBad();
+    }
+
+    void Helper::breachFun(void* arg){
+        auto c_this = (Helper*) arg;
+
+        while(1){
+            // check for breachButton on D7
+            if(c_this->breach.read() == 1){
+                continue;
+            }
+
+             // if cap open w/o nfc > RED
+            if(c_this->NFCUsed == false){
+                while(!c_this->NFCUsed){
+                    c_this->led->red();
+                    ThisThread::sleep_for(50ms);
+                    c_this->led->clear();
+                    ThisThread::sleep_for(50ms);
+                }
+							continue;
+						}
+
+						// wait for cap to be closed
+						if(c_this->NFCUsed == true){ 
+							while(c_this->breach.read() == 0){
+								ThisThread::sleep_for(50ms);
+							}
+						}
+
+					ThisThread::sleep_for(500ms);
+        }
     }
 }

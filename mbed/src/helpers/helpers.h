@@ -8,6 +8,7 @@
 namespace Helpers {
   class Helper {
         public:
+            Helper(PN532 *rfid, Servo *cap);
             Helper(PN532 *rfid, Servo *cap, Led* led);
             // rfid functions from pn532.h
             void defaultCardInfo(uint8_t *uid, uint8_t uidLength, uint32_t cardid);
@@ -34,13 +35,21 @@ namespace Helpers {
             // set Pointer to Led object
             void setLed( Led *led);
             Led* led;
-        
+
+            // Breach Thread
+            static void breachFun(void* arg);
+
         private:
+            bool NFCUsed = false;
+            
             void blinkLedGood(void);
             void blinkLedBad(void);
 
             rtos::Thread ledThread;
             PN532* rfid;
             Servo* cap;
+
+            rtos::Thread breachThread;
+            DigitalIn breach;
     };
 }
