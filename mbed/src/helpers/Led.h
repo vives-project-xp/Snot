@@ -3,9 +3,8 @@
 #include "mbed.h"
 
 
-namespace Helpers{
-    class Led{
-
+namespace Helpers {
+    class Led {
         public:
             Led(PwmOut* red, PwmOut* green, PwmOut* blue);
             

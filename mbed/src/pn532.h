@@ -149,7 +149,7 @@
 #define PN532_GPIO_P34                      (4)
 #define PN532_GPIO_P35                      (5)
 
-class PN532{
+class PN532 {
      public:
         PN532(PinName mosi, PinName miso, PinName sck, PinName ss);  // SPI
         void begin(void);
