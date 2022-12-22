@@ -77,4 +77,7 @@ Flashing red light = bad card
 
 Flashing green and red light = master card
 
+Constant flashing red light = Opened cap without NFC card
+To reset present master card
+
 Constant blue light = pn532 board not found
