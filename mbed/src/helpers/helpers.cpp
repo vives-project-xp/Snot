@@ -56,7 +56,10 @@ namespace Helpers {
                 return false;
             }
         }
+        // flag sets to reset led after picking up without NFC
+        flag.set(1);
         printf("Found master card\r\n");
+        flag.set(0);
         return true;
     }
 
@@ -217,12 +220,10 @@ namespace Helpers {
     }
 
     void Helper::goodCard(void) {
-	  flag.set(1);
       openCap();
       printf("good card\r\n");
       blinkLedGood();
       closeCap();
-      flag.set(0);
     }
 
     void Helper::badCard(void) {
