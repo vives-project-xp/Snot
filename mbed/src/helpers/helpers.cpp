@@ -217,16 +217,16 @@ namespace Helpers {
     }
 
     void Helper::goodCard(void) {
-    	NFCUsed = true; // later chahge to events
+	  flag.set(1);
       openCap();
       printf("good card\r\n");
       blinkLedGood();
       closeCap();
-      NFCUsed = false;
+      flag.set(0);
     }
 
     void Helper::badCard(void) {
-			NFCUsed = false;
+		flag.set(0);
       closeCap();
       printf("Wrong card\r\n");
       blinkLedBad();
@@ -234,32 +234,33 @@ namespace Helpers {
 
     void Helper::breachFun(void* arg){
         auto c_this = (Helper*) arg;
-
+				uint32_t flag_read;
         while(1){
             // check for breachButton on D7
             if(c_this->breach.read() == 1){
+                ThisThread::sleep_for(500ms);
                 continue;
             }
-
+            
              // if cap open w/o nfc > RED
-            if(c_this->NFCUsed == false){
-                while(!c_this->NFCUsed){
+             flag_read = c_this->flag.wait_any_for(0 || 1, 1ms);
+            if(flag_read != 1){
+                while(flag_read != 1){
+                    flag_read = c_this->flag.wait_any_for(0 || 1, 1ms);
                     c_this->led->red();
                     ThisThread::sleep_for(50ms);
                     c_this->led->clear();
                     ThisThread::sleep_for(50ms);
                 }
-							continue;
-						}
+            }
 
-						// wait for cap to be closed
-						if(c_this->NFCUsed == true){ 
-							while(c_this->breach.read() == 0){
-								ThisThread::sleep_for(50ms);
-							}
-						}
-
-					ThisThread::sleep_for(500ms);
+            // wait for cap to be closed
+            
+            while(c_this->breach.read() == 0){
+                ThisThread::sleep_for(50ms);
+            }
+        
+            ThisThread::sleep_for(500ms);
         }
     }
 }

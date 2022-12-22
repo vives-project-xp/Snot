@@ -4,6 +4,7 @@
 #include "Servo.h"
 #include "Led.h"
 #include "Thread.h"
+#include "EventFlags.h"
 
 namespace Helpers {
   class Helper {
@@ -41,6 +42,7 @@ namespace Helpers {
 
         private:
             bool NFCUsed = false;
+            EventFlags flag;
             
             void blinkLedGood(void);
             void blinkLedBad(void);
