@@ -4,6 +4,7 @@
  
 Servo myservo(D9);
 InterruptIn cap_button(D7);
+// InterruptIn button2(D8);
 InterruptIn NFC(D2);
 DigitalOut led(D4);
 Thread thread1;
@@ -12,15 +13,18 @@ bool isSpiked = false;
 bool isUnlocked = false;
 bool capIsOn = false;
 bool threadStarted = false;
+bool NFCbutton = false;
 
-void loss() {
-    myservo.write(0.2);
+void loosen() {
+    myservo.write(0);
+    
 }
 
 void spike() {
     led.write(1);
     isSpiked = true;
     capIsOn = false;
+    
 }
 
 void tighten() {
@@ -28,7 +32,7 @@ void tighten() {
         // cap_button.rise(spike);
         isUnlocked = false;
         capIsOn = true;
-        myservo.write(0.45);
+        myservo.write(0.75);
     }
     // ThisThread::sleep_for(1ms);
 }
@@ -55,7 +59,7 @@ void notspike() {
 void detect() {
     isUnlocked = true;
     if (!isSpiked) {
-        loss();
+        loosen();
         cap_button.rise(notspike);
         // thread1.start(closeCapAfterNFC);
     }
@@ -68,8 +72,12 @@ int main() {
     cap_button.rise(spike);
     NFC.fall(detect);
     NFC.rise(nfcAway);
+    // button2.fall(detect);
+    // button2.rise(nfcAway);
+
 
     while (true) {
+        
         if (!threadStarted && isUnlocked && capIsOn) {
             printf("KHA");
             thread1.start(closeCapAfterNFC);
