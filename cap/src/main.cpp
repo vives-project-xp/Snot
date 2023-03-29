@@ -2,7 +2,7 @@
 #include "mbed.h"
 #include "Servo.h"
  
-Servo myservo(D9);
+Servo myservo(D6);
 InterruptIn cap_button(D7);
 // InterruptIn button2(D8);
 InterruptIn NFC(D2);
@@ -16,7 +16,7 @@ bool threadStarted = false;
 bool NFCbutton = false;
 
 void loosen() {
-    myservo.write(0);
+    myservo.write(0.2);
     
 }
 
@@ -29,7 +29,7 @@ void spike() {
 
 void tighten() {
     if (!isUnlocked) {
-        // cap_button.rise(spike);
+        cap_button.rise(spike);
         isUnlocked = false;
         capIsOn = true;
         myservo.write(0.75);
@@ -48,7 +48,7 @@ void nfcAway() {
 }
 
 void closeThread() {
-    // thread1.terminate();
+    thread1.terminate();
 }
 
 void notspike() {
@@ -67,7 +67,7 @@ void detect() {
 
 int main() {
     led.write(0);
-    myservo.write(0);
+    myservo.write(0.2);
     cap_button.fall(tighten);
     cap_button.rise(spike);
     NFC.fall(detect);
@@ -76,14 +76,14 @@ int main() {
     // button2.rise(nfcAway);
 
 
-    while (true) {
+    // while (true) {
         
-        if (!threadStarted && isUnlocked && capIsOn) {
-            printf("KHA");
-            thread1.start(closeCapAfterNFC);
-        }
+    //     if (!threadStarted && isUnlocked && capIsOn) {
+    //         printf("KHA");
+    //         thread1.start(closeCapAfterNFC);
+    //     }
 
-    }
+    // }
     return 0;
 }
 // This is main.cpp
