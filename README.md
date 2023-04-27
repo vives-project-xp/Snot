@@ -14,8 +14,11 @@ Voorlopig hebben we een aantal designs gehad. Het laatste design is de blauwe do
 Zie discord INFO/Design voor verdere info.
 
 ![foto dop](3D-tekeningen/dop.PNG)
+
 Dit is een foto van de dop, in het grote gat komt een servo motor, die het glas klem zet. Er zit ook nog een dubbele bodem in voor de pcb, maar die hebben we niet kunnen uittesten.
+
 ![foto deur](3D-tekeningen/deur.PNG)
+
 Dit is een foto van het deurtje dat de servo motor zal in plaats houden en beschermen.
 
 ## PCB Design
