@@ -8,6 +8,16 @@ This is the firmware for the K64F mbed board that runs the VivesCityGame hardwar
 
 More info here > https://citygame.labict.be/
 
+## How to install libraries and compile?
+
+```bash
+git clone https://github.com/vives-project-xp/Snot.git
+git checkout snot-v2
+cd .\box
+conda activate mbed
+mbed deploy
+mbed compile -f
+```
 
 ## License
 
