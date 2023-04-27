@@ -1,6 +1,6 @@
 # SNOT
 
-Safe Night Out Together
+Safe Night Out Together is een project waar er wordt geprobeerd om spiking zo veel mogelijk tegen te houden. Wij hebben een dop ontwikkeld die dir probeerd tegen te houden. De bedoeling is dat je een nfc bandje scant op de dop en dat deze dan open zal gaan, als deze eraf wordt geforceerd zal er een lichtje branden, die de persoon inlicht om het drankje weg te gieten.
 
 ## Discord
 
@@ -70,7 +70,7 @@ Deze code was van een vorig project en wij hebben die aangepast voor ons project
 [Hier](https://www.instagram.com/reel/CrSmLBvvxVR/?utm_source=ig_web_copy_link) is een demo van de opstelling.
 
 ![schakeling](schakeling/schakeling.png)
-Dit is de schakeling die gebruikt wordt in de demo, deze heeft 2 knoppen. 1 knop hiervan simuleert de nfc, omdat wij deze nog hebben.
+Dit is de schakeling die gebruikt wordt in de demo, deze heeft 2 knoppen. 1 knop hiervan simuleert de nfc, omdat wij deze nog niet hebben. Het filmpje legt ook uit hoe deze precies werkt.
 
 ## Benodigdheden Hardware
 
@@ -79,7 +79,7 @@ Dit is de schakeling die gebruikt wordt in de demo, deze heeft 2 knoppen. 1 knop
 - PN532 (versie blauw) voor scannen van de NFC --> soort versie kan nog veranderen ondertussen
 - Zelfgemaakte PCB wanneer werken voor STM te vervangen (zou moeten in cap passen)
 - PN532 (versie rood) voor het scannen van de NFC (zou moeten in de cap passen)
-- Alle bestelde hardware + deze solderen op de zelf gemaakte PCB
+- Alle bestelde hardware + deze solderen op de zelf gemaakte PCB (zie mapje pcb)
 
 ## TODO
 
