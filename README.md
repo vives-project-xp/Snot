@@ -13,13 +13,19 @@ Zie ook:  [Redmine](https://project.devbit.be/projects/snot)
 Voorlopig hebben we een aantal designs gehad. Het laatste design is de blauwe dop.
 Zie discord INFO/Design voor verdere info.
 
+![foto dop](3D-tekeningen/dop.PNG)
+Dit is een foto van de dop, in het grote gat komt een servo motor, die het glas klem zet. Er zit ook nog een dubbele bodem in voor de pcb, maar die hebben we niet kunnen uittesten.
+![foto deur](3D-tekeningen/deur.PNG)
+Dit is een foto van het deurtje dat de servo motor zal in plaats houden en beschermen.
+
 ## PCB Design
 
 Om de shield te laten werken moet je hem in SPI mode zetten. Voor SPI moet je SEL0 en SEL1 sluiten, je moet ze dus dichtsolderen of met een schakelaar connecteren.
 
 Om de shield te verbinden met bv. een nucleo moet je 3 power pinnen(5V, 3V3 en GND) en 4 spi pinnen(MOSI, MISO, SCK, en CS/SS) verbinden.
 
-Voor het elektronisch en PCB schema terug te vinden of meer info te krijgen ga je naar discord: INFO/PCB-Design
+In het mapje bcp staat er een mapje snot_pcb. Hierin staat de kicad file voor de pcb, deze kan gebruikt worden om de pcb online te bestellen. Er staat ook een BOM lijst met de benodigde materialen. 
+
 
 ## Benodigdheden Software
 
@@ -36,7 +42,8 @@ Zorg er ook voor dat miniconda is toegevoegd aan je omgevings variabelen: bv. C:
 
 Voor het binnenhalen van de code en overige:
 ```bash
-git clone git@github.com:vives-project-xp/Snot.git
+git clone https://github.com/vives-project-xp/Snot.git
+git checkout snot-v2
 ```
 
 De volledige code is terug te vinden onder de file 'mbed'.
@@ -51,10 +58,17 @@ Voor het compileren van de code:
 ```bash 
 mbed compile -f
 ```
+
+Er is ook code voor de box, maar die heeft zijn eigen README.md.
+Deze code was van een vorig project en wij hebben die aangepast voor ons project. Er zijn teveel files die we niet gebruiken, maar alle klasses zijn met elkaar verbonden en hierdoor is het te veel werk om de bestanden te verwijderen die we niet gebruiken.
+
 ## Opstelling Cap 
 
-Deze opstelling is voor het testen van de schakeling die in de cap gaat. Dit wordt vervangen door de zelf gemaakte pcb in de volgende fase.
-![opstellingCap](./fotos/opstellingCap.png)
+[Hier](https://www.instagram.com/reel/CrSmLBvvxVR/?utm_source=ig_web_copy_link) is een demo van de opstelling.
+
+![schakeling](schakeling/schakeling.png)
+Dit is de schakeling die gebruikt wordt in de demo, deze heeft 2 knoppen. 1 knop hiervan simuleert de nfc, omdat wij deze nog hebben.
+
 ## Benodigdheden Hardware
 
 - Cap + valse bodem + dekseltje motor
@@ -66,5 +80,4 @@ Deze opstelling is voor het testen van de schakeling die in de cap gaat. Dit wor
 
 ## TODO
 
-- Alles implementeren in de kleinere versie (bestelde componenten + zelf ontworpen bordje)
-- Implementeren van de neopixel (ws2812b) in de code
+- De pcb solderen en dan NFC daarin implementeren
