@@ -32,7 +32,7 @@ void tighten() {
         cap_button.rise(spike);
         isUnlocked = false;
         capIsOn = true;
-        myservo.write(0.75);
+        myservo.write(0.73);
     }
     // ThisThread::sleep_for(1ms);
 }
