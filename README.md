@@ -63,7 +63,7 @@ mbed compile -f
 ```
 
 Er is ook code voor de box, maar die heeft zijn eigen README.md.
-Deze code was van een vorig project en wij hebben die aangepast voor ons project. Er zijn teveel files die we niet gebruiken, maar alle klasses zijn met elkaar verbonden en hierdoor is het te veel werk om de bestanden te verwijderen die we niet gebruiken.
+Deze code was van een vorig project en wij hebben die aangepast voor ons project. Er zijn teveel files die we niet gebruiken, maar alle klasses zijn met elkaar verbonden en hierdoor is het te veel werk om de bestanden te verwijderen die we niet gebruiken. In citygame-displaydriver/Display.cpp is most of the code.
 
 ## Opstelling Cap 
 
@@ -71,6 +71,10 @@ Deze code was van een vorig project en wij hebben die aangepast voor ons project
 
 ![schakeling](schakeling/schakeling.png)
 Dit is de schakeling die gebruikt wordt in de demo, deze heeft 2 knoppen. 1 knop hiervan simuleert de nfc, omdat wij deze nog niet hebben. Het filmpje legt ook uit hoe deze precies werkt.
+
+## NFC
+
+There is code for the NFC included, but we haven't been able to test it out. In the code for the box, there is a file called citygame-displaydriver/Display.cpp. This is where most of the code for the box is and here you will have to add your own NFC code.
 
 ## Benodigdheden Hardware
 
@@ -84,3 +88,4 @@ Dit is de schakeling die gebruikt wordt in de demo, deze heeft 2 knoppen. 1 knop
 ## TODO
 
 - De pcb solderen en dan NFC daarin implementeren
+- NFC code voor de box maken
