@@ -4,7 +4,9 @@ Safe Night Out Together is een project waar er wordt geprobeerd om spiking zo ve
 
 ## Discord
 
-Join het discord kanaal voor alle info en vragen: [Discord](https://discord.gg/33ayYHaHzA)
+Join het discord kanaal voor alle info en vragen: [Discord](https://discord.gg/33ayYHaHzA))
+
+Bekijk ook onze [promovideo!](https://www.youtube.com/watch?v=ft7jXlZkHr0&feature=youtu.be)
 
 Zie ook:  [Redmine](https://project.devbit.be/projects/snot)
 
